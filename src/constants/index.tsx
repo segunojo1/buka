@@ -120,3 +120,18 @@ export const searchResults = [
       phone: "+234 806 111 2222"
     }
   ];
+
+export const quickPrompts = [
+    "Best amala spots in Lagos",
+    "Cheap amala under ₦1000",
+    "24-hour amala restaurants",
+    "Amala spots with parking",
+    "Highly rated amala joints",
+    "Amala near me right now"
+  ];
+
+export const languages = [
+    { name: "English", example: "Find me good amala spots nearby" },
+    { name: "Pidgin", example: "Where amala dey near me wey cheap pass?" },
+    { name: "Yoruba", example: "Ibo ni mo le ri amala to dara?" }
+  ];
