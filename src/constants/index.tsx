@@ -56,3 +56,67 @@ export const features = [
       description: "View detailed menus, prices, and specialties"
     }
   ];
+
+
+export const searchResults = [
+    {
+      id: "1",
+      name: "Mama Sisi Amala Joint",
+      address: "15 Herbert Macaulay Way, Yaba, Lagos",
+      distance: "0.5km",
+      rating: 4.8,
+      reviewCount: 245,
+      priceRange: "₦800 - ₦1,500",
+      isOpen: true,
+      specialties: ["Traditional Amala", "Ewedu", "Gbegiri", "Assorted Meat"],
+      phone: "+234 802 123 4567"
+    },
+    {
+      id: "2",
+      name: "Iya Basira Spot",
+      address: "23 Allen Avenue, Ikeja, Lagos",
+      distance: "1.2km", 
+      rating: 4.6,
+      reviewCount: 189,
+      priceRange: "₦600 - ₦1,200",
+      isOpen: true,
+      specialties: ["Amala Dudu", "Assorted", "Fresh Fish", "Special Stew"],
+      phone: "+234 803 987 6543"
+    },
+    {
+      id: "3",
+      name: "Buka Express",
+      address: "12 Adeola Odeku Street, Victoria Island, Lagos",
+      distance: "2.1km",
+      rating: 4.4,
+      reviewCount: 156,
+      priceRange: "₦1,000 - ₦2,000",
+      isOpen: false,
+      specialties: ["Premium Amala", "Special Stew", "Peppered Meat"],
+      phone: "+234 804 555 1234"
+    },
+    {
+      id: "4",
+      name: "Alhaja Ramota Kitchen",
+      address: "45 Ikorodu Road, Fadeyi, Lagos",
+      distance: "3.5km",
+      rating: 4.9,
+      reviewCount: 312,
+      priceRange: "₦700 - ₦1,300",
+      isOpen: true,
+      specialties: ["Authentic Amala", "Homemade Ewedu", "Fresh Pepper Soup"],
+      phone: "+234 805 222 3333"
+    },
+    {
+      id: "5",
+      name: "Uncle Jide's Place",
+      address: "8 Adeniyi Jones Avenue, Ikeja, Lagos",
+      distance: "4.0km",
+      rating: 4.3,
+      reviewCount: 98,
+      priceRange: "₦500 - ₦1,000",
+      isOpen: true,
+      specialties: ["Budget Amala", "Student Special", "Quick Service"],
+      phone: "+234 806 111 2222"
+    }
+  ];
