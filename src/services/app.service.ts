@@ -51,6 +51,21 @@ class AppService {
             throw error;
         }
     }
+
+    public async chatText(message: string, sessionId: string, userLocation: { latitude: number; longitude: number }, language: string) {
+        try {
+            const response = await this.api.post(`/api/chat/text`, {
+                message,
+                sessionId,
+                userLocation,
+                language
+            });
+            return response.data;
+        } catch (error) {
+            console.error("Failed to send chat message:", error);
+            throw error; 
+        }
+    }
 }
 
 export default AppService.getInstance()
