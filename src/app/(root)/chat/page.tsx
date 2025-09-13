@@ -1,3 +1,4 @@
+import ChatInterface from '@/components/chat/page'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { languages, quickPrompts } from '@/constants'
@@ -26,7 +27,7 @@ const Chat = () => {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Chat Interface */}
           <div className="lg:col-span-2">
-            {/* <ChatInterface /> */}
+            <ChatInterface />
           </div>
 
           {/* Sidebar */}

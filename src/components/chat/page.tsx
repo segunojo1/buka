@@ -99,7 +99,7 @@ const ChatInterface = () => {
     }
   };
 
-  return <Card className="h-[600px] flex flex-col">
+  return <Card className="h-[600px] overflow-y-scroll flex flex-col">
       <CardHeader className="bg-gradient-to-r from-primary to-secondary text-primary-foreground">
         <CardTitle className="flex items-center gap-2">
           <Bot className="w-6 h-6" />
