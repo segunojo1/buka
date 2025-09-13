@@ -1,5 +1,5 @@
 import React from "react";
-import SearchAmalaForm from "./search-amala-form";
+import SearchAmalaForm from "../search-amala-form";
 
 const SearchAmala = () => {
   return (
@@ -13,7 +13,7 @@ const SearchAmala = () => {
         </p>
       </div>
 
-      {/* <SearchAmalaForm /> */}
+      <SearchAmalaForm />
     </section>
   );
 };

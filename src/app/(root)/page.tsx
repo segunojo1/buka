@@ -1,16 +1,18 @@
 import Navbar from "@/components/navbar";
-import SearchAmala from "@/components/search-amala";
+import SearchAmala from "@/components/home/search-amala";
 import { Button } from "@/components/ui/button";
 import { MapPin, MessageCircle } from "lucide-react";
 import Image from "next/image";
+import FeaturedSpots from "@/components/home/featured-spots";
+import WhyChoose from "@/components/home/why-choose";
 
 export default function Home() {
   return (
     <div className="font-sans ">
       <div
-        className="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 rounded-xl items-center justify-center p-8"
+        className="flex min-h-screen flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 items-center justify-center p-8"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuB_RdmyXmJn5ymflCcWXzo84SNX9LVkYNqqeqNRHaf4L2aqKpN2xOIFAG7yIK6gb5ZBNv5mLYLZqQysSSEvbNaOnKNbYpHwJoFCx-OwvpBw0JTBSf4082hdliufVWqpzNBBArn3eqkpI1qYxQZQOc0Nhoh_wgmrZ_nHIhDA04VGUuNIgWKr8NSWwL9l_2PmkcpxvRbIl2I8U7saKr3kPuy1FIfryY5qcba5Mr3iat6KyxZuQ6jQ2u_k3HBqun6cxvM6x_0bEUca0CNe")`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%), url("/test-bg.jpg")`,
         }}
       >
         <div className="flex flex-col gap-4 text-center">
@@ -42,6 +44,10 @@ export default function Home() {
       </div>
 
       <SearchAmala />
+      
+      <FeaturedSpots />
+
+      <WhyChoose />
     </div>
   );
 }
