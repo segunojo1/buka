@@ -7,14 +7,15 @@ import { Input } from './ui/input'
 import { Button } from './ui/button'
 import { toast } from 'sonner'
 import appService from '@/services/app.service'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import useAppStore from '@/store/app.store'
 
 const SearchAmalaForm = () => {
-  const router = useRouter()
-  const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null)
-  const [loading, setLoading] = useState(false)
-  const { searchQuery, setSearchQuery, setSearchSpotsResult } = useAppStore()
+  const router = useRouter();
+  const path = usePathname();
+  // const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null)
+  // const [loading, setLoading] = useState(false)
+  const { searchQuery, setSearchQuery, setSearchSpotsResult, location, setLocation, loadingSearchedSpots, setLoadingSearchedSpots } = useAppStore()
 
   const handleLocationAccess = () => {
     if (navigator.geolocation) {
@@ -40,6 +41,10 @@ const SearchAmalaForm = () => {
       toast('Please get your location first')
       return
     }
+    if (path == '/') {
+       router.push('/search')
+
+    }
 
     const payload = {
       message: searchQuery,
@@ -52,7 +57,7 @@ const SearchAmalaForm = () => {
     }
 
     try {
-      setLoading(true)
+      setLoadingSearchedSpots(true)
       const result = await appService.chatText(payload)
       setSearchSpotsResult(result)
       router.push('/search')
@@ -60,7 +65,7 @@ const SearchAmalaForm = () => {
     } catch (err) {
       console.error('Search error:', err)
     } finally {
-      setLoading(false)
+      setLoadingSearchedSpots(false)
     }
   }
 
@@ -120,10 +125,10 @@ const SearchAmalaForm = () => {
             size="lg"
             className="flex-1 h-12 text-lg"
             onClick={handleSearch}
-            disabled={loading}
+            disabled={loadingSearchedSpots}
           >
             <Search className="w-5 h-5 mr-2" />
-            {loading ? 'Searching...' : 'Search Amala Spots'}
+            {loadingSearchedSpots ? 'Searching...' : 'Search Amala Spots'}
           </Button>
 
           <Button

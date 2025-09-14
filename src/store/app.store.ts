@@ -38,6 +38,10 @@ interface AppStore {
   setSearchSpotsResult: (result: SearchResult | null) => void;
   setSearchQuery: (query: string) => void;
   clearSearch: () => void;
+  location: { latitude: number; longitude: number } | null;
+  setLocation: (location: { latitude: number; longitude: number } | null) => void;
+  loadingSearchedSpots: boolean;
+  setLoadingSearchedSpots: (loading: boolean) => void;
 }
 
 const useAppStore = create<AppStore>((set) => ({
@@ -46,6 +50,10 @@ const useAppStore = create<AppStore>((set) => ({
   setSearchSpotsResult: (result) => set({ searchSpotsResult: result }),
   setSearchQuery: (query) => set({ searchQuery: query }),
   clearSearch: () => set({ searchSpotsResult: null, searchQuery: '' }),
+  location: null,
+  setLocation: (location) => set({ location }),
+  loadingSearchedSpots: false, 
+  setLoadingSearchedSpots: (loading) => set({ loadingSearchedSpots: loading})
 }));
 
 export default useAppStore;

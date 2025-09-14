@@ -1,70 +1,29 @@
 "use client";
 
-import useAppStore, { Spot } from "@/store/app.store";
+import useAppStore from "@/store/app.store";
 import { MapPin } from "lucide-react";
-import React, { useEffect, useRef } from "react";
-// @ts-ignore
-// eslint-disable-next-line import/no-webpack-loader-syntax
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import React, { useState } from "react";
 
-// Set the access token
-mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || '';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import { GoogleMap, InfoWindow, LoadScript, Marker } from "@react-google-maps/api";
+
+const containerStyle = {
+  width: "100%",
+  height: "600px",
+  borderRadius: "0.5rem",
+  overflow: "hidden",
+};
+
+// Default center (Lagos)
+const defaultCenter = {
+  lat: 6.5244,
+  lng: 3.3792,
+};
+
 
 const Maps = () => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
   const { searchSpotsResult } = useAppStore();
-
-  useEffect(() => {
-    if (!mapContainer.current || !searchSpotsResult?.spots?.length) return;
-
-    // Initialize map only once
-    if (!map.current) {
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/streets-v11',
-        center: [
-          searchSpotsResult.spots[0].location.longitude,
-          searchSpotsResult.spots[0].location.latitude
-        ],
-        zoom: 12
-      });
-
-      // Add navigation control (the +/- zoom buttons)
-      map.current.addControl(new mapboxgl.NavigationControl());
-    }
-
-    // Add markers for each spot
-    searchSpotsResult.spots.forEach((spot) => {
-      if (!map.current) return;
-      
-      // Create a marker
-      new mapboxgl.Marker({
-        color: "#FF6B6B"
-      })
-        .setLngLat([spot.location.longitude, spot.location.latitude])
-        .setPopup(
-          new mapboxgl.Popup({ offset: 25 })
-            .setHTML(`
-              <div class="p-2">
-                <h3 class="font-bold">${spot.name}</h3>
-                <p class="text-sm">${spot.address || 'No address provided'}</p>
-                ${spot.rating ? `<p class="text-yellow-500">⭐ ${spot.rating}/5</p>` : ''}
-              </div>
-            `)
-        )
-        .addTo(map.current);
-    });
-
-    // Clean up on unmount
-    return () => {
-      if (map.current) {
-        map.current.remove();
-        map.current = null;
-      }
-    };
-  }, [searchSpotsResult]);
+  const [selectedSpot, setSelectedSpot] = useState<any>(null);
 
   if (!searchSpotsResult?.spots?.length) {
     return (
@@ -75,13 +34,71 @@ const Maps = () => {
         </div>
       </div>
     );
-  }
+}
+
+  // Center map around first spot
+  const center = {
+    lat: searchSpotsResult.spots[0].location.latitude,
+    lng: searchSpotsResult.spots[0].location.longitude,
+  };
 
   return (
-    <div 
-      ref={mapContainer} 
-      className="h-[600px] w-full rounded-lg overflow-hidden"
-    />
+    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY!}>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={center || defaultCenter}
+        zoom={12}
+        options={{
+          zoomControl: true,
+          streetViewControl: false,
+          mapTypeControl: false,
+          fullscreenControl: true,
+          styles: [
+            {
+              featureType: "poi",
+              elementType: "labels.icon",
+              stylers: [{ visibility: "off" }],
+            },
+          ],
+        }}
+      >
+        {/* Render all spots */}
+        {searchSpotsResult.spots.map((spot: any) => (
+          <Marker
+            key={spot.id}
+            position={{
+              lat: spot.location.latitude,
+              lng: spot.location.longitude,
+            }}
+            onClick={() => setSelectedSpot(spot)}
+            icon={{
+              url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+            }}
+          />
+        ))}
+
+        {/* Info window when a spot is clicked */}
+        {selectedSpot && (
+          <InfoWindow
+            position={{
+              lat: selectedSpot.location.latitude,
+              lng: selectedSpot.location.longitude,
+            }}
+            onCloseClick={() => setSelectedSpot(null)}
+          >
+            <div className="p-2">
+              <h3 className="font-bold">{selectedSpot.name}</h3>
+              <p className="text-sm">
+                {selectedSpot.address || "No address provided"}
+              </p>
+              {selectedSpot.rating && (
+                <p className="text-yellow-500">⭐ {selectedSpot.rating}/5</p>
+              )}
+            </div>
+          </InfoWindow>
+        )}
+      </GoogleMap>
+    </LoadScript>
   );
 };
 
