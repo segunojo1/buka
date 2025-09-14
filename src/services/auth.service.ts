@@ -49,6 +49,13 @@ class AuthService {
   public async login(data: { email: string; password: string }) {
     try {
       const response = await this.api.post(`/api/auth/login`, data);
+      if (response.data?.token) {
+        Cookies.set("token", response.data.token);
+        Cookies.set("user", JSON.stringify(response.data.user));
+        this.api.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${response.data.token}`;
+      }
       return response.data;
     } catch (error) {
       console.error("Failed to login:", error);

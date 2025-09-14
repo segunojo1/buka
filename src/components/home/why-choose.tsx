@@ -1,3 +1,5 @@
+"use client";
+
 import { features } from '@/constants'
 import React from 'react'
 import { Card, CardContent } from '../ui/card'

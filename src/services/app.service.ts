@@ -52,8 +52,9 @@ class AppService {
         }
     }
 
-    public async chatText(message: string, sessionId: string, userLocation: { latitude: number; longitude: number }, language: string) {
-        try {
+    public async chatText(payload: any) {
+        const {message, sessionId, userLocation, language} = payload
+         try {
             const response = await this.api.post(`/api/chat/text`, {
                 message,
                 sessionId,

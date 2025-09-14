@@ -1,8 +1,8 @@
-import Navbar from "@/components/navbar";
+"use client";
+
 import SearchAmala from "@/components/home/search-amala";
 import { Button } from "@/components/ui/button";
 import { MapPin, MessageCircle } from "lucide-react";
-import Image from "next/image";
 import FeaturedSpots from "@/components/home/featured-spots";
 import WhyChoose from "@/components/home/why-choose";
 
@@ -22,6 +22,7 @@ export default function Home() {
           <h2 className="text-stone-200 text-lg font-normal leading-normal @[480px]:text-xl @[480px]:font-normal @[480px]:leading-normal">
             Find your favorite amala joints and explore new ones across Nigeria.
           </h2>
+
         </div>
         <div className="flex items-center gap-5 mt-10">
           <Button
