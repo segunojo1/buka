@@ -10,6 +10,7 @@ import { Search as SearchIcon } from "lucide-react";
 import React, { useState } from "react";
 import useAppStore, { Spot } from "@/store/app.store";
 import { useRouter } from "next/navigation";
+import Maps from "@/components/maps";
 
 
 const Search = () => {
@@ -170,14 +171,16 @@ export const SearchResults = () => {
           </div>
         ) : null
       ) : (
-        <Card className="h-[600px] flex items-center justify-center">
-          <CardContent>
-            <MapIcon className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <p className="text-center text-muted-foreground">
-              Map view coming soon! For now, enjoy the list view above.
-            </p>
-          </CardContent>
-        </Card>
+        // <Card className="h-[600px] flex items-center justify-center">
+        //   <CardContent>
+        //     <MapIcon className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+        //     <p className="text-center text-muted-foreground">
+        //       Map view coming soon! For now, enjoy the list view above.
+        //     </p>
+        //   </CardContent>
+        // </Card>
+
+        <Maps />
       )}
 
       {/* Load More Button - Only show if there are results */}

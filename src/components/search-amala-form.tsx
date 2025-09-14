@@ -12,7 +12,7 @@ import useAppStore from '@/store/app.store'
 
 const SearchAmalaForm = () => {
   const router = useRouter()
-  const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>({latitude: 6.4663, longitude: 3.5641})
+  const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null)
   const [loading, setLoading] = useState(false)
   const { searchQuery, setSearchQuery, setSearchSpotsResult } = useAppStore()
 
@@ -48,7 +48,7 @@ const SearchAmalaForm = () => {
         latitude: location.latitude,
         longitude: location.longitude,
       },
-      language: 'xo',
+      language: 'en',
     }
 
     try {
@@ -79,6 +79,7 @@ const SearchAmalaForm = () => {
                   ? `Lat: ${location.latitude.toFixed(4)}, Lon: ${location.longitude.toFixed(4)}`
                   : ''
               }
+              readOnly
               className="pl-10 h-12 text-lg border-2"
             />
           </div>

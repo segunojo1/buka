@@ -9,14 +9,15 @@ interface SpotCardProps {
     id: string;
     name: string;
     address: string;
-    distance: string;
+    distanceKm: number;
     rating: number;
     reviewCount: number;
     priceRange: string;
     isOpen: boolean;
     specialties: string[];
     image?: string;
-    phone?: string;
+    phoneNumber?: string;
+    averageRating?: number;
   };
   onViewDetails: (id: string) => void;
 }
@@ -51,7 +52,7 @@ const SpotCard = ({ spot, onViewDetails }: SpotCardProps) => {
             </h3>
             <div className="flex items-center gap-1.5 flex-shrink-0 ml-3">
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-              <span className="font-semibold text-base">{spot.rating}</span>
+              <span className="font-semibold text-base">{spot.averageRating}</span>
               <span className="text-sm text-muted-foreground">({spot.reviewCount})</span>
             </div>
           </div>
@@ -60,7 +61,7 @@ const SpotCard = ({ spot, onViewDetails }: SpotCardProps) => {
           <div className="flex items-center gap-2 text-muted-foreground mb-4">
             <MapPin className="w-4 h-4" />
             <span className="text-sm flex-1 font-medium">{spot.address}</span>
-            <span className="text-sm font-semibold text-primary bg-primary/10 px-2 py-1 rounded-full">{spot.distance}</span>
+            <span className="text-sm font-semibold text-primary bg-primary/10 px-2 py-1 rounded-full">{spot.distanceKm.toFixed(4)}km</span>
           </div>
 
           {/* Price Range */}
@@ -102,21 +103,21 @@ const SpotCard = ({ spot, onViewDetails }: SpotCardProps) => {
               View Details
             </Button>
             
-            {spot.phone && (
+            {spot.phoneNumber && (
               <Button 
                 variant="outline" 
                 size="sm"
                 className="rounded-full"
                 onClick={(e) => {
                   e.stopPropagation();
-                  window.open(`tel:${spot.phone}`, '_self');
+                  window.open(`tel:${spot.phoneNumber}`, '_self');
                 }}
               >
                 <Phone className="w-4 h-4" />
               </Button>
             )}
           </div>
-        </CardContent>
+        </CardContent> 
 
       </div>
     </Card>

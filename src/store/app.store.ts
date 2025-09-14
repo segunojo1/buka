@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface Spot {
+export interface Spot {
   id: string;
   name: string;
   address?: string;
@@ -8,9 +8,13 @@ interface Spot {
   rating?: number;
   priceRange?: string;
   isOpen?: boolean;
+  location: {
+    latitude: number;
+    longitude: number
+  }
 }
 
-interface SearchResult {
+export interface SearchResult {
   success: boolean;
   reply: string;                 
   spots: Spot[];
