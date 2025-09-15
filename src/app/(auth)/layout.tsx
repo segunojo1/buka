@@ -15,27 +15,14 @@ const geistMono = Geist_Mono({
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <main
-      className={`${geistSans.variable} ${geistMono.variable} antialiased auth-container`}
+      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
-      <section className="auth-form">
-        <div className="auth-box">
-          <div className="flex flex-row gap-3">
-            <Logo />
-          </div>
+      <div className="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+      <div className="layout-container flex h-full ">
 
+      </div>
           <div>{children}</div>
-        </div>
-      </section>
-
-      <section className="auth-illustration">
-        <Image
-          src="/test-bg.jpg"
-          alt="auth illustration"
-          height={1000}
-          width={1000}
-          className="size-full object-cover"
-        />
-      </section>
+      </div>
     </main>
   );
 };

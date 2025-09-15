@@ -189,9 +189,8 @@ class AppService {
     }
     //==================================================END OF BUSYNESS ENDPOINTS====================================================
 
+    //================================================BEGINNING OF CHAT ENDPOINTS====================================================
 
-    
-    
 
     public async chatText(payload: any) {
         const {message, sessionId, userLocation, language} = payload
@@ -209,7 +208,13 @@ class AppService {
         }
     }
 
-    // public async 
+    public async sendVoiceChat() {
+        try {
+            
+        } catch (error) {
+            
+        }
+    }
 }
 
 export default AppService.getInstance()

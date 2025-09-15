@@ -37,12 +37,12 @@ const Login = () => {
         maxWidth: 400,
         margin: "40px auto",
         padding: 24,
-        border: "1px solid #eee",
+        border: "2px solid #5f5d5d",
         borderRadius: 8,
         color: "#000"
       }}
     >
-      <h2 style={{ marginBottom: 24 }} className="text-black">Login</h2>
+      <h2 style={{ marginBottom: 24 }} className="text-black font-bold">Login</h2>
       <form onSubmit={handleSubmit}>
         <Input
           name="email"
@@ -75,8 +75,8 @@ const Login = () => {
         >
           Login
         </button>
-      </form>
-      <p className="text-xl mt-5">Dont have an account? <Link href="/register" className="">Sign up</Link></p>
+      </form> 
+      <p className="text-xl mt-5 ">Dont have an account? <Link href="/register" className="">Sign up</Link></p>
     </div>
   );
 };
