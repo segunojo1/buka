@@ -9,6 +9,9 @@
 import { handleLocationAccess } from '@/lib/utils'
 
 export default function Home() {
+  const {user} = useAppStore();
+  console.log(user);
+  
 
    const {location, setLocation} = useAppStore();
     const onLocationSuccess = (coords: { latitude: number; longitude: number }) => {
@@ -30,7 +33,7 @@ export default function Home() {
         <div className="layout-content-container flex flex-col w-full max-w-[1200px] flex-1">
           <div className="px-4 pb-10 pt-5">
             <h2 className="text-[var(--brand-text-primary)] tracking-tight text-4xl md:text-5xl font-bold font-ojuju">
-              Welcome back, Segun
+              Welcome back, {user?.firstName}
             </h2> 
             <p className="text-[var(--brand-text-secondary)] mt-2 text-lg">
               Here's a snapshot of what's happening around you.

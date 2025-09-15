@@ -3,6 +3,8 @@ import { Ojuju, Plus_Jakarta_Sans } from 'next/font/google';
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import NextTopLoader from "nextjs-toploader";
+import { useAuth } from "@/hooks/useAuth";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 
 // Initialize the font with desired weights and subsets
 const ojuju = Ojuju({
@@ -22,17 +24,21 @@ export const metadata: Metadata = {
   description: "Find Amala",
 };
 
+
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${ojuju.variable} ${jakarta.variable}`}>
-      <body className="font-sans antialiased">
-        <NextTopLoader color="#b26834"/>
-        {children}
-        <Toaster />
+    <html lang="en">
+      <body className={`${ojuju.variable} ${jakarta.variable} font-sans antialiased`}>
+        <NextTopLoader color="#b26834" showSpinner={false} />
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+        <Toaster position="top-center" />
       </body>
     </html> 
   );

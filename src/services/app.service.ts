@@ -19,7 +19,7 @@ class AppService {
         // Add request interceptor to add auth token
         this.api.interceptors.request.use(
             (config) => {
-                const token = Cookies.get('access_token');
+                const token = Cookies.get('buka_token');
                 if (token) {
                     config.headers.Authorization = `Bearer ${token}`;
                 }
@@ -46,7 +46,7 @@ class AppService {
                     return new Promise((resolve, reject) => {
                         this.failedRequests.push(() => {
                             if (originalRequest.headers) {
-                                originalRequest.headers.Authorization = `Bearer ${Cookies.get('access_token')}`;
+                                originalRequest.headers.Authorization = `Bearer ${Cookies.get('buka_token')}`;
                             }
                             this.api(originalRequest).then(resolve).catch(reject);
                         });
@@ -66,7 +66,7 @@ class AppService {
                     
                     // Retry the original request
                     if (originalRequest.headers) {
-                        originalRequest.headers.Authorization = `Bearer ${Cookies.get('access_token')}`;
+                        originalRequest.headers.Authorization = `Bearer ${Cookies.get('buka_token')}`;
                     }
                     return this.api(originalRequest);
                 } catch (refreshError) {
