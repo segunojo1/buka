@@ -144,7 +144,7 @@ const SearchAmalaForm = () => {
         {/* Quick Search Suggestions */}
         <div className="flex flex-wrap gap-2 pt-2">
           <span className="text-sm text-muted-foreground">Quick searches:</span>
-          {['Cheap amala near me', '24-hour spots', 'Best rated', 'Under ₦1000'].map(
+          {['Amala near me', '24-hour spots', 'Best rated', 'Around ₦1000'].map(
             (suggestion) => (
               <Button
                 key={suggestion}
