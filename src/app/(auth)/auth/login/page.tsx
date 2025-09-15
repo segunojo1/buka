@@ -13,6 +13,7 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -21,6 +22,7 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const response = await authService.login(form);
       toast("Login successful!");
 
@@ -28,21 +30,21 @@ const Login = () => {
       router.push("/");
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false)
     }
   };
 
   return (
-    <div
-      style={{
-        maxWidth: 400,
-        margin: "40px auto",
-        padding: 24,
-        border: "2px solid #5f5d5d",
-        borderRadius: 8,
-        color: "#000"
-      }}
-    >
-      <h2 style={{ marginBottom: 24 }} className="text-black font-bold">Login</h2>
+    <div className="w-full max-w-md space-y-8">
+      <div className="text-center">
+        <h2 className="font-ojuju text-4xl font-bold tracking-tight text-buka-black">
+          Welcome Back!
+        </h2>
+        <p className="mt-2 text-sm">
+          Login to continue your journey.
+        </p>
+      </div>
       <form onSubmit={handleSubmit}>
         <Input
           name="email"
@@ -52,7 +54,7 @@ const Login = () => {
           onChange={handleChange}
           style={{ width: "100%", marginBottom: 12, padding: 8 }}
           required
-        />
+        /> 
         <Input
           name="password"
           type="password"
@@ -72,11 +74,13 @@ const Login = () => {
             border: "none",
             borderRadius: 4,
           }}
+          disabled={loading}
+          className="disabled:bg-[#434242]"
         >
-          Login
+          {loading ? "Loading...": "Login"}
         </button>
       </form> 
-      <p className="text-xl mt-5 ">Dont have an account? <Link href="/register" className="">Sign up</Link></p>
+      <p className="text-sm mt-5 ">Dont have an account? <Link href="/auth/register" className="underline ">Sign up</Link></p>
     </div>
   );
 };

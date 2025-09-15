@@ -9,6 +9,7 @@ import { toast } from "sonner";
 
 const Register = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -35,17 +36,15 @@ const Register = () => {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: 400,
-        margin: "40px auto",
-        padding: 24,
-        border: "1px solid #eee",
-        borderRadius: 8,
-        color: "#000"
-      }}
-    >
-      <h2 style={{ marginBottom: 24 }}>Sign Up</h2>
+    <div className="w-full max-w-md space-y-8">
+      <div className="text-center">
+        <h2 className="font-ojuju text-4xl font-bold tracking-tight text-buka-black">
+          Welcome Back!
+        </h2>
+        <p className="mt-2 text-sm">
+          Login to continue your journey.
+        </p>
+      </div>
       <form onSubmit={handleSubmit}>
         <Input
           name="firstName"
@@ -109,13 +108,15 @@ const Register = () => {
             border: "none",
             borderRadius: 4,
           }}
+          disabled={loading}
+          className="disabled:bg-[#434242]"
         >
-          Register
+          {loading ? "Loading..." : "Register"}
         </button>
       </form>
-      <p className="text-xl mt-5">
+      <p className="text-sm font-medium transition-colors mt-5">
         Already have an account?{" "}
-        <Link href="/login" className="">
+        <Link href="/auth/login" className="underline">
           Login
         </Link>
       </p>

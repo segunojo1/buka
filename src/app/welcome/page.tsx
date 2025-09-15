@@ -79,13 +79,13 @@ const Welcome = () => {
           </p>
         </div>
         <div className="mt-12 !space-y-4">
-          <Link href="/register" className="flex ">
-            <Button className="flex w-full bg-[var(--primary-color)] px-5 py-4 text-base font-semibold text-white shadow-sm transition-all hover:bg-[var(--secondary-color)] focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]">
+          <Link href="/auth/register" className="flex ">
+            <Button className="flex w-full h-full bg-[var(--primary-color)] px-5 py-4 text-base font-semibold text-white shadow-sm transition-all hover:bg-[var(--secondary-color)] focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]">
               Register
             </Button>
           </Link>
-          <Link href="/login" className="flex">
-            <Button className="flex w-full bg-[var(--primary-color)] px-5 py-4 text-base font-semibold text-white shadow-sm transition-all hover:bg-[var(--secondary-color)] focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]">
+          <Link href="/auth/login" className="flex">
+            <Button className="flex w-full h-full bg-[var(--primary-color)] px-5 py-4 text-base font-semibold text-white shadow-sm transition-all hover:bg-[var(--secondary-color)] focus-visible:outline-offset-2 focus-visible:outline-[var(--primary-color)]">
               Login
             </Button>
           </Link>{" "}
