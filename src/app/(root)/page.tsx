@@ -1,15 +1,31 @@
 "use client";
 
-import SearchAmala from "@/components/home/search-amala";
-import { Button } from "@/components/ui/button";
-import { MapPin, MessageCircle } from "lucide-react";
-import FeaturedSpots from "@/components/home/featured-spots";
-import WhyChoose from "@/components/home/why-choose";
-import Link from "next/link";
+// import SearchAmala from "@/components/home/search-amala";
+// import { Button } from "@/components/ui/button";
+// import { MapPin, MessageCircle } from "lucide-react";
+// import FeaturedSpots from "@/components/home/featured-spots";
+// import WhyChoose from "@/components/home/why-choose";
+// import Link from "next/link";
+import { handleLocationAccess } from '@/lib/utils'
 
 export default function Home() {
+
+   const {location, setLocation} = useAppStore();
+    const onLocationSuccess = (coords: { latitude: number; longitude: number }) => {
+      setLocation(coords);
+    };
+  
+    const onLocationError = (error: GeolocationPositionError) => {
+      console.error('Error accessing geolocation:', error);
+      toast.error('Failed to access your location');
+    };
+  
+    useEffect(() => {
+      handleLocationAccess(onLocationSuccess, onLocationError)
+    }, [])
+  
   return (
-    <div>
+    <div> 
       <main className="px-6 sm:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-12">
         <div className="layout-content-container flex flex-col w-full max-w-[1200px] flex-1">
           <div className="px-4 pb-10 pt-5">
@@ -119,8 +135,10 @@ export default function Home() {
   );
 }
 
-import React from "react";
+import React, { useEffect } from "react";
 import Maps from "@/components/maps";
+import { toast } from "sonner";
+import useAppStore from "@/store/app.store";
 
 export const TrendingLocation = () => {
   return (

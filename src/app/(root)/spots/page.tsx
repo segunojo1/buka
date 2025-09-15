@@ -1,8 +1,25 @@
+"use client";
+
 import Maps from "@/components/maps";
 import SpotCardNew from "@/components/spots/spot-card-new";
-import React from "react";
+import useAppStore from "@/store/app.store";
+import React, { useEffect } from "react";
+import { toast } from "sonner";
 
 const Spots = () => {
+  const {location, setLocation} = useAppStore();
+  const onLocationSuccess = (coords: { latitude: number; longitude: number }) => {
+    setLocation(coords);
+  };
+
+  const onLocationError = (error: GeolocationPositionError) => {
+    console.error('Error accessing geolocation:', error);
+    toast.error('Failed to access your location');
+  };
+
+  useEffect(() => {
+    
+  }, [])
   return (
     <div className="w-full flex-1">
       <div className="flex p-6 ">

@@ -1,7 +1,7 @@
 'use client'
 
 import { Search, MapPin, Filter, Star, Mic } from 'lucide-react'
-import React, { useState } from 'react'
+import React from 'react'
 import { Card } from './ui/card'
 import { Input } from './ui/input'
 import { Button } from './ui/button'
@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import appService from '@/services/app.service'
 import { usePathname, useRouter } from 'next/navigation'
 import useAppStore from '@/store/app.store'
+import { handleLocationAccess } from '@/lib/utils'
 
 const SearchAmalaForm = () => {
   const router = useRouter();
@@ -17,19 +18,14 @@ const SearchAmalaForm = () => {
   // const [loading, setLoading] = useState(false)
   const { searchQuery, setSearchQuery, setSearchSpotsResult, location, setLocation, loadingSearchedSpots, setLoadingSearchedSpots } = useAppStore()
 
-  const handleLocationAccess = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords
-          setLocation({ latitude, longitude })
-        },
-        (error) => {
-          console.error('Error accessing geolocation:', error)
-        }
-      )
-    }
-  }
+  const onLocationSuccess = (coords: { latitude: number; longitude: number }) => {
+    setLocation(coords);
+  };
+
+  const onLocationError = (error: GeolocationPositionError) => {
+    console.error('Error accessing geolocation:', error);
+    toast.error('Failed to access your location');
+  };
 
   const handleSearch = async () => {
     if (!searchQuery) {
@@ -43,7 +39,6 @@ const SearchAmalaForm = () => {
     }
     if (path == '/') {
        router.push('/search')
-
     }
 
     const payload = {
@@ -92,7 +87,7 @@ const SearchAmalaForm = () => {
             variant="outline"
             size="lg"
             className="h-12 px-4"
-            onClick={handleLocationAccess}
+            onClick={() => handleLocationAccess(onLocationSuccess, onLocationError)}
           >
             <MapPin className="w-5 h-5" />
           </Button>

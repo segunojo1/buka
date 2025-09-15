@@ -13,8 +13,8 @@ const Navbar = () => {
 
   return (
     <header className="flex items-center sticky top-0 z-20 w-full bg-[#FAF7F4] py-4 backdrop-blur-lg shadow-sm">
-      <div className=" container mx-auto flex items-center justify-between ">
-        <div className="flex items-center  gap-5">
+      <div className=" container mx-auto flex items-center justify-between px-7">
+        <div className="flex items-center gap-5">
           <Logo />
           <div className="flex-1 justify-center hidden lg:flex">
             <nav className="flex items-center gap-4 bg-white/50 rounded-full px-6 py-2">
@@ -49,9 +49,8 @@ const Navbar = () => {
             </nav>
           </div>
         </div>
-      <User />
+        <User />
       </div>
-
     </header>
   );
 };
