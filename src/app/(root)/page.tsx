@@ -9,7 +9,157 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="font-sans ">
+    <div>
+      <main className="px-6 sm:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-12">
+        <div className="layout-content-container flex flex-col w-full max-w-[1200px] flex-1">
+          <div className="px-4 pb-10 pt-5">
+            <h2 className="text-[var(--brand-text-primary)] tracking-tight text-4xl md:text-5xl font-bold font-ojuju">
+              Welcome back, Segun
+            </h2> 
+            <p className="text-[var(--brand-text-secondary)] mt-2 text-lg">
+              Here's a snapshot of what's happening around you.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 p-4">
+            <div className="lg:col-span-2 bg-[var(--surface-white)] rounded-2xl p-6 flex flex-col gap-6 shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out">
+              <div className="flex justify-between items-center">
+                <h3 className="text-2xl font-bold text-[var(--brand-text-primary)] font-ojuju">
+                  Your Location
+                </h3>
+                <div className="flex items-center gap-2 text-sm text-[var(--brand-text-secondary)]">
+                  <span className="material-symbols-outlined text-lg text-[var(--brand-primary)]">
+                    location_on
+                  </span>
+                  <span className="font-medium">Lagos, Nigeria</span>
+                </div>
+              </div>
+              <div className="flex-1 rounded-xl overflow-hidden aspect-video">
+                <Maps />
+              </div>
+            </div>
+            <div className="bg-[var(--surface-white)] rounded-2xl p-6 flex flex-col gap-6 shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out">
+              <h3 className="text-2xl font-bold text-[var(--brand-text-primary)] font-ojuju">
+                Quick Actions
+              </h3>
+              <div className="flex flex-col gap-4">
+                <a
+                  className="flex items-center gap-4 p-4 rounded-xl bg-[var(--brand-secondary)] hover:bg-opacity-70 transition-colors"
+                  href="#"
+                >
+                  <span className="material-symbols-outlined text-2xl text-[var(--brand-primary)]">
+                    near_me
+                  </span>
+                  <div className="flex-1">
+                    <h4 className="font-bold text-[var(--brand-text-primary)]">
+                      Nearby Spots
+                    </h4>
+                    <p className="text-sm text-[var(--brand-text-secondary)]">
+                      Discover spots near you
+                    </p>
+                  </div>
+                  <span className="material-symbols-outlined text-[var(--brand-text-secondary)] opacity-50">
+                    arrow_forward
+                  </span>
+                </a>
+                <a
+                  className="flex items-center gap-4 p-4 rounded-xl bg-[var(--brand-secondary)] hover:bg-opacity-70 transition-colors"
+                  href="#"
+                >
+                  <span className="material-symbols-outlined text-2xl text-[var(--brand-primary)]">
+                    signal_cellular_alt
+                  </span>
+                  <div className="flex-1">
+                    <h4 className="font-bold text-[var(--brand-text-primary)]">
+                      Busyness Check
+                    </h4>
+                    <p className="text-sm text-[var(--brand-text-secondary)]">
+                      Check how busy a spot is
+                    </p>
+                  </div>
+                  <span className="material-symbols-outlined text-[var(--brand-text-secondary)] opacity-50">
+                    arrow_forward
+                  </span>
+                </a>
+                <a
+                  className="flex items-center gap-4 p-4 rounded-xl bg-[var(--brand-secondary)] hover:bg-opacity-70 transition-colors"
+                  href="#"
+                >
+                  <span className="material-symbols-outlined text-2xl text-[var(--brand-primary)]">
+                    smart_toy
+                  </span>
+                  <div className="flex-1">
+                    <h4 className="font-bold text-[var(--brand-text-primary)]">
+                      AI Assistant
+                    </h4>
+                    <p className="text-sm text-[var(--brand-text-secondary)]">
+                      Get personalized recommendations
+                    </p>
+                  </div>
+                  <span className="material-symbols-outlined text-[var(--brand-text-secondary)] opacity-50">
+                    arrow_forward
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className="p-4 mt-8">
+            <h3 className="text-2xl font-bold text-[var(--brand-text-primary)] mb-6">
+              Trending Locations
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <TrendingLocation />
+              <TrendingLocation />
+              <TrendingLocation />
+              <TrendingLocation />
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+import React from "react";
+import Maps from "@/components/maps";
+
+export const TrendingLocation = () => {
+  return (
+    <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out">
+      <div
+        className="h-48 bg-cover bg-center"
+        style={{
+          backgroundImage:
+            "url(https://lh3.googleusercontent.com/aida-public/AB6AXuD9PwtuwnNljxYw2NpQiwvtEUZbX31YE08r05gKVVyQ_-niksObeegl_KdEPInma3HA2un_sdqxiIEupX6nAkSro_9arQ749aXDYDl06Iu7LidGKQDXyDqkVam-fZID635gv2eIlfUPBRvK0Rbd2v4jc-OJaCuC56G0sLyQefnqMu9lIO3lYXtMtHRpCPucO6xKhOB7HPzEEWUaDbi1cIBCnBErLsox9U5Jt-LZPKfVMbUyzLQ9oBq8nPmcIyBg9PdvF5jLzklo1cXu)",
+        }}
+      ></div>
+      <div className="p-5">
+        <h4 className="font-bold text-lg text-[var(--brand-text-primary)]">
+          Nike Art Gallery
+        </h4>
+        <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
+          Lekki, Lagos
+        </p>
+        <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center gap-2 text-[var(--brand-primary)]">
+            <span className="material-symbols-outlined text-xl">
+              local_fire_department
+            </span>
+            <span className="font-bold text-sm">Busy</span>
+          </div>
+          <a
+            className="text-[var(--brand-primary)] text-sm font-semibold hover:underline"
+            href="#"
+          >
+            View Details
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+{
+  /* <div className="font-sans ">
       <div
         className="flex min-h-screen flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 items-center justify-center p-8"
         style={{
@@ -54,6 +204,5 @@ export default function Home() {
       <FeaturedSpots />
 
       <WhyChoose />
-    </div>
-  );
+    </div> */
 }

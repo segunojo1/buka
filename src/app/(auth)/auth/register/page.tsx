@@ -113,7 +113,8 @@ const Register = () => {
         >
           {loading ? "Loading..." : "Register"}
         </button>
-      </form>
+      
+      </form> 
       <p className="text-sm font-medium transition-colors mt-5">
         Already have an account?{" "}
         <Link href="/auth/login" className="underline">
