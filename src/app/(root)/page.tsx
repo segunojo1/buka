@@ -52,10 +52,10 @@ export default function Home() {
       <main className="px-6 sm:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-12">
         <div className="layout-content-container flex flex-col w-full max-w-[1200px] flex-1">
           <div className="px-4 pb-10 pt-5">
-            <h2 className="text-[var(--brand-text-primary)] tracking-tight text-4xl md:text-5xl font-bold font-ojuju">
-              Welcome back, {user?.firstName}
+            <h2 className="text-[var(--brand-text-primary)] tracking-tight text-4xl md:text-5xl  ">
+              Welcome back, <span className='font-ojuju font-bold'>{user?.firstName}</span>
             </h2> 
-            <p className="text-[var(--brand-text-secondary)] mt-2 text-lg">
+            <p className="text-[var(--brand-text-secondary)] mt-2 text-lg [font-family:var(--font-jakarta)]">
               Here's a snapshot of what's happening around you.
             </p>
           </div>
@@ -77,7 +77,7 @@ export default function Home() {
               </div>
             </div>
             <div className="bg-[var(--surface-white)] rounded-2xl p-6 flex flex-col gap-6 shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out">
-              <h3 className="text-2xl font-bold text-[var(--brand-text-primary)] font-ojuju">
+              <h3 className="text-2xl font-bold text-[var(--brand-text-primary)] ">
                 Quick Actions
               </h3>
               <div className="flex flex-col gap-4">

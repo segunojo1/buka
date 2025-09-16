@@ -33,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${ojuju.variable} ${jakarta.variable} font-sans antialiased`}>
+      <body className={` ${jakarta.variable} font-sans antialiased`}>
         <NextTopLoader color="#b26834" showSpinner={false} />
         <AuthProvider>
           {children}
