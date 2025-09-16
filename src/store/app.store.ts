@@ -1,23 +1,35 @@
 import { create } from 'zustand';
 
-export interface SearchResult {
+export interface Spot {
   id: string;
   name: string;
+  description: string | null;
   address: string;
-  rating: number;
-  image: string;
-  price: string;
   latitude: number;
   longitude: number;
-  description: string;
-  reviews: string[];
-  amenities: string[];
-  opening_hours: string;
-  contact: string;
-  website: string;
-  distance: number;
-  duration: string;
-  tags: string[];
+  phoneNumber: string;
+  openingTime: string | null;
+  closingTime: string | null;
+  averageRating: number;
+  reviewCount: number;
+  priceRange: number;
+  specialties: string[];
+  createdAt: string;
+  updatedAt: string;
+  isVerified: boolean;
+  distanceKm: number;
+  reviews: any[] | null;
+  busynessInfo: any | null;
+}
+
+export interface SearchResult {
+  data: Spot[];
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 }
 
 export interface Location {
@@ -41,17 +53,15 @@ interface AppStore {
   // Search state
   searchSpotsResult: SearchResult | null;
   searchQuery: string;
+  loadingSearchedSpots: boolean;
   setSearchSpotsResult: (result: SearchResult | null) => void;
   setSearchQuery: (query: string) => void;
+  setLoadingSearchedSpots: (loading: boolean) => void;
   clearSearch: () => void;
   
   // Location state
   location: Location | null;
   setLocation: (location: Location | null) => void;
-  
-  // Loading states
-  loadingSearchedSpots: boolean;
-  setLoadingSearchedSpots: (loading: boolean) => void;
   
   // User state
   user: User | null ;

@@ -9,11 +9,10 @@
 import { handleLocationAccess } from '@/lib/utils'
 
 export default function Home() {
-  const {user} = useAppStore();
-  console.log(user);
+  const {user, setLoadingSearchedSpots, setSearchSpotsResult, location, setLocation } = useAppStore();
+  // console.log(user);
   
 
-   const {location, setLocation} = useAppStore();
     const onLocationSuccess = (coords: { latitude: number; longitude: number }) => {
       setLocation(coords);
     };
@@ -25,10 +24,31 @@ export default function Home() {
   
     useEffect(() => {
       handleLocationAccess(onLocationSuccess, onLocationError)
-    }, [])
+
+      const getNearbySpots = async() => {
+        try {
+          setLoadingSearchedSpots(true);
+          console.log(location);
+          
+          const result = await appService.getNearbySpots({
+            latitude: location?.latitude,
+            longitude: location?.longitude,
+          });
+          setSearchSpotsResult(result);
+        } catch (error) {
+          console.error('Failed to get nearby spots:', error);
+          toast.error('Failed to get nearby spots. Please try again.');
+        } finally {
+          setLoadingSearchedSpots(false);
+        }
+      }
+      getNearbySpots();
+    }, [location])
   
   return (
     <div> 
+          
+
       <main className="px-6 sm:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-12">
         <div className="layout-content-container flex flex-col w-full max-w-[1200px] flex-1">
           <div className="px-4 pb-10 pt-5">
@@ -142,6 +162,8 @@ import React, { useEffect } from "react";
 import Maps from "@/components/maps";
 import { toast } from "sonner";
 import useAppStore from "@/store/app.store";
+import SearchAmalaForm from '@/components/search-amala-form';
+import appService from '@/services/app.service';
 
 export const TrendingLocation = () => {
   return (

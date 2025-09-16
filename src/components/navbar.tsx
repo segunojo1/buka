@@ -1,19 +1,20 @@
 "use client";
 
-import React from "react";
 import Logo from "./logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Input } from "./ui/input";
-import { Search, User } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { User, ChevronDown } from "lucide-react";
+import ProfileDrop from "./profile-drop";
+// import {
+//   SimpleDropdown as DropdownMenu,
+//   SimpleDropdownContent as DropdownMenuContent,
+//   SimpleDropdownItem as DropdownMenuItem,
+//   SimpleDropdownLabel as DropdownMenuLabel,
+//   SimpleDropdownSeparator as DropdownMenuSeparator,
+//   SimpleDropdownTrigger as DropdownMenuTrigger,
+// } from "@/components/ui/simple-dropdown";
+
+
 
 const Navbar = () => {
   const route = usePathname();
@@ -21,7 +22,7 @@ const Navbar = () => {
 
   return (
     <header className="flex items-center sticky top-0 z-20 w-full bg-[#FAF7F4] py-4 backdrop-blur-lg shadow-sm">
-      <div className=" container mx-auto flex items-center justify-between px-7">
+      <div className=" container mx-auto flex items-center justify-between max-w-5xl px-7">
         <div className="flex items-center gap-5">
           <Logo />
           <div className="flex-1 justify-center hidden lg:flex">
@@ -57,25 +58,44 @@ const Navbar = () => {
             </nav>
           </div>
         </div>
-        <DropdownMenu>
-  <DropdownMenuTrigger>Open</DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuLabel>My Account</DropdownMenuLabel>
-    <DropdownMenuSeparator />
-    <DropdownMenuItem>Profile</DropdownMenuItem>
-    <DropdownMenuItem>Billing</DropdownMenuItem>
-    <DropdownMenuItem>Team</DropdownMenuItem>
-    <DropdownMenuItem>Subscription</DropdownMenuItem>
-  </DropdownMenuContent>
-</DropdownMenu>
-        <User />
+        {/* <DropdownMenu>
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+              <User className="h-4 w-4 text-gray-700" />
+            </div>
+            <DropdownMenuTrigger asChild>
+              <button 
+                className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none"
+                aria-label="Open user menu"
+              >
+                <span>Account</span>
+                <ChevronDown className="h-4 w-4" />
+              </button>
+            </DropdownMenuTrigger>
+          </div>
+          
+          <DropdownMenuContent className="w-56">
+            <div className="px-4 py-3">
+              <p className="text-sm font-medium">Welcome back</p>
+              <p className="truncate text-sm text-gray-500">user@example.com</p>
+            </div>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>Billing</DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Sign out</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu> */}
+
+        <ProfileDrop />
       </div>
     </header>
   );
 };
 
 export default Navbar;
-
+//currenly installing npm so takes some secs ..some time basicall
 {
   /* <nav className=" sticky top-0 z-20 w-full bg-white/80 backdrop-blur-lg shadow-sm">
       <div className="container mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3">

@@ -10,77 +10,87 @@ import appService from '@/services/app.service'
 import { usePathname, useRouter } from 'next/navigation'
 import useAppStore from '@/store/app.store'
 import { handleLocationAccess } from '@/lib/utils'
+import { cn } from '@/lib/utils'
 
-const SearchAmalaForm = () => {
+interface SearchAmalaFormProps {
+  className?: string;
+}
+
+const SearchAmalaForm: React.FC<SearchAmalaFormProps> = ({ className }) => {
   const router = useRouter();
   const path = usePathname();
-  // const [location, setLocation] = useState<{ latitude: number; longitude: number } | null>(null)
-  // const [loading, setLoading] = useState(false)
-  const { searchQuery, setSearchQuery, setSearchSpotsResult, location, setLocation, loadingSearchedSpots, setLoadingSearchedSpots } = useAppStore()
+  const {
+    searchQuery,
+    setSearchQuery,
+    setSearchSpotsResult,
+    location,
+    setLocation,
+    loadingSearchedSpots,
+    setLoadingSearchedSpots
+  } = useAppStore();
 
   const onLocationSuccess = (coords: { latitude: number; longitude: number }) => {
     setLocation(coords);
   };
 
-  const onLocationError = (error: GeolocationPositionError) => {
-    console.error('Error accessing geolocation:', error);
-    toast.error('Failed to access your location');
+  const onLocationError = (errorMessage: string) => {
+    console.error('Geolocation error:', errorMessage);
+    toast.error(errorMessage);
+  };
+
+  const handleLocationRequest = () => {
+    handleLocationAccess(onLocationSuccess, onLocationError);
   };
 
   const handleSearch = async () => {
-    if (!searchQuery) {
-      toast('Please enter a search query')
-      return
+    if (!searchQuery.trim()) {
+      toast.error('Please enter a search query');
+      return;
     }
 
     if (!location) {
-      toast('Please get your location first')
-      return
-    }
-    if (path == '/') {
-       router.push('/search')
-    }
-
-    const payload = {
-      message: searchQuery,
-      sessionId: '', 
-      userLocation: {
-        latitude: location.latitude,
-        longitude: location.longitude,
-      },
-      language: 'en',
+      handleLocationRequest();
+      return;
     }
 
     try {
-      setLoadingSearchedSpots(true)
-      const result = await appService.chatText(payload)
-      setSearchSpotsResult(result)
-      router.push('/search')
+      setLoadingSearchedSpots(true);
       
-    } catch (err) {
-      console.error('Search error:', err)
+      if (path === '/') {
+        router.push('/search');
+      }
+      
+      const results = await appService.getNearbySpots({
+        latitude: location.latitude,
+        longitude: location.longitude,
+      });
+      
+      setSearchSpotsResult(results);
+      
+    } catch (error) {
+      console.error('Search failed:', error);
+      toast.error('Failed to perform search. Please try again.');
     } finally {
-      setLoadingSearchedSpots(false)
+      setLoadingSearchedSpots(false);
     }
   }
 
   return (
     <Card className="p-6 max-w-4xl mx-auto shadow-lg border-0 bg-card/95 backdrop-blur">
       <div className="space-y-4">
-
         {/* Location Input */}
         <div className="flex gap-2">
           <div className="relative flex-1">
-            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
             <Input
               placeholder="Enter location (or use GPS)"
               value={
                 location
                   ? `Lat: ${location.latitude.toFixed(4)}, Lon: ${location.longitude.toFixed(4)}`
-                  : ''
+                  : 'Location not set'
               }
               readOnly
-              className="pl-10 h-12 text-lg border-2"
+              className="pl-10 h-12 text-base border-2"
             />
           </div>
           <Button
@@ -88,48 +98,36 @@ const SearchAmalaForm = () => {
             size="lg"
             className="h-12 px-4"
             onClick={() => handleLocationAccess(onLocationSuccess, onLocationError)}
+            type="button"
           >
             <MapPin className="w-5 h-5" />
           </Button>
         </div>
 
-        {/* Search Query Input */}
+        {/* Search and Filter */}
         <div className="flex gap-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+          <div className='relative flex-1'>
+            <Search className='absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground' />
             <Input
-              placeholder="Search for amala spots, price range, etc."
-              value={searchQuery || ''}
+              placeholder='Search for amala spots, price range, etc.'
+              value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 text-lg border-2"
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+              className='pl-10 h-12 text-base border-2 rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
             />
           </div>
           <Button
-            variant="secondary"
-            size="lg"
-            className="h-12 px-4"
-          >
-            <Mic className="w-5 h-5" />
-          </Button>
-        </div>
-
-        {/* Search Button */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Button
-            variant="hero"
-            size="lg"
-            className="flex-1 h-12 text-lg"
             onClick={handleSearch}
             disabled={loadingSearchedSpots}
+            className="h-12 px-6 text-base"
+            type="button"
           >
-            <Search className="w-5 h-5 mr-2" />
-            {loadingSearchedSpots ? 'Searching...' : 'Search Amala Spots'}
+            {loadingSearchedSpots ? 'Searching...' : 'Search'}
           </Button>
-
-          <Button
-            variant="outline"
-            size="lg"
-            className="h-12 px-6"
+          <Button 
+            variant="outline" 
+            className="h-12 px-4 text-base"
+            type="button"
           >
             <Filter className="w-5 h-5 mr-2" />
             Filters
@@ -137,7 +135,7 @@ const SearchAmalaForm = () => {
         </div>
 
         {/* Quick Search Suggestions */}
-        <div className="flex flex-wrap gap-2 pt-2">
+        <div className="flex flex-wrap items-center gap-2 pt-2">
           <span className="text-sm text-muted-foreground">Quick searches:</span>
           {['Amala near me', '24-hour spots', 'Best rated', 'Around ₦1000'].map(
             (suggestion) => (
