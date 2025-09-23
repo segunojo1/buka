@@ -1,11 +1,11 @@
 "use client";
 
 import useAppStore from "@/store/app.store";
-import { MapPin } from "lucide-react";
+import { MapPin, Pin } from "lucide-react";
 import React, { useState } from "react";
 
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { GoogleMap, InfoWindow, LoadScript, Marker } from "@react-google-maps/api";
+import { GoogleMap, InfoWindow, LoadScript, Marker, useJsApiLoader } from "@react-google-maps/api";
 
 const containerStyle = {
   width: "100%",
@@ -24,7 +24,18 @@ const defaultCenter = {
 const Maps = () => {
   const { searchSpotsResult, loadingSearchedSpots } = useAppStore();
   const [selectedSpot, setSelectedSpot] = useState<any>(null);
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY!,
+  });
 
+  if (!isLoaded) {
+    <div className="h-full w-full flex items-center justify-center bg-gray-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-2"></div>
+          <p className="text-gray-500">Loading map data...</p>
+        </div>
+      </div>
+  }
   if (loadingSearchedSpots) {
     return (
       <div className="h-full w-full flex items-center justify-center bg-gray-100">
@@ -54,8 +65,7 @@ const Maps = () => {
   };
 
   return (
-    <LoadScript googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY!}>
-      <GoogleMap
+            <GoogleMap
         mapContainerStyle={containerStyle}
         center={center || defaultCenter}
         zoom={12}
@@ -83,7 +93,8 @@ const Maps = () => {
             }}
             onClick={() => setSelectedSpot(spot)}
             icon={{
-              url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
+              url: "/amala-icon.png",
+              scaledSize: new window.google.maps.Size(32, 32),
             }}
           />
         ))}
@@ -117,7 +128,6 @@ const Maps = () => {
           </InfoWindow>
         )}
       </GoogleMap>
-    </LoadScript>
   );
 };
 

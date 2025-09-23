@@ -9,7 +9,7 @@
 import { handleLocationAccess } from '@/lib/utils'
 
 export default function Home() {
-  const {user, setLoadingSearchedSpots, setSearchSpotsResult, location, setLocation } = useAppStore();
+  const {user, setLoadingSearchedSpots, setSearchSpotsResult, searchSpotsResult, location, setLocation } = useAppStore();
   // console.log(user);
   
 
@@ -81,9 +81,9 @@ export default function Home() {
                 Quick Actions
               </h3>
               <div className="flex flex-col gap-4">
-                <a
+                <Link
                   className="flex items-center gap-4 p-4 rounded-xl bg-[var(--brand-secondary)] hover:bg-opacity-70 transition-colors"
-                  href="#"
+                  href="/spots"  
                 >
                   <span className="material-symbols-outlined text-2xl text-[var(--brand-primary)]">
                     near_me
@@ -99,10 +99,10 @@ export default function Home() {
                   <span className="material-symbols-outlined text-[var(--brand-text-secondary)] opacity-50">
                     arrow_forward
                   </span>
-                </a>
-                <a
+                </Link>
+                <Link
                   className="flex items-center gap-4 p-4 rounded-xl bg-[var(--brand-secondary)] hover:bg-opacity-70 transition-colors"
-                  href="#"
+                  href="/"
                 >
                   <span className="material-symbols-outlined text-2xl text-[var(--brand-primary)]">
                     signal_cellular_alt
@@ -118,10 +118,10 @@ export default function Home() {
                   <span className="material-symbols-outlined text-[var(--brand-text-secondary)] opacity-50">
                     arrow_forward
                   </span>
-                </a>
-                <a
+                </Link>
+                <Link
                   className="flex items-center gap-4 p-4 rounded-xl bg-[var(--brand-secondary)] hover:bg-opacity-70 transition-colors"
-                  href="#"
+                  href="/"
                 >
                   <span className="material-symbols-outlined text-2xl text-[var(--brand-primary)]">
                     smart_toy
@@ -137,7 +137,7 @@ export default function Home() {
                   <span className="material-symbols-outlined text-[var(--brand-text-secondary)] opacity-50">
                     arrow_forward
                   </span>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -145,7 +145,14 @@ export default function Home() {
             <h3 className="text-2xl font-bold text-[var(--brand-text-primary)] mb-6">
               Trending Locations
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {searchSpotsResult?.data.map((spot: Spot) => (
+                <SpotCard
+                  key={spot.id}
+                  spot={spot}
+                  onViewDetails={() => {}}
+                />
+              ))}
               <TrendingLocation />
               <TrendingLocation />
               <TrendingLocation />
@@ -161,9 +168,11 @@ export default function Home() {
 import React, { useEffect } from "react";
 import Maps from "@/components/maps";
 import { toast } from "sonner";
-import useAppStore from "@/store/app.store";
+import useAppStore, { Spot } from "@/store/app.store";
 import SearchAmalaForm from '@/components/search-amala-form';
 import appService from '@/services/app.service';
+import SpotCard from '@/components/spots/spot-card';
+import Link from 'next/link';
 
 export const TrendingLocation = () => {
   return (

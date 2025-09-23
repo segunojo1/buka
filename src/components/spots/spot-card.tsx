@@ -23,9 +23,9 @@ interface SpotCardProps {
 }
 const SpotCard = ({ spot, onViewDetails }: SpotCardProps) => {
   return (
-    <Card className="clean-card overflow-hidden hover:shadow-xl cursor-pointer group border-0">
+    <Card className="clean-card overflow-hidden hover:shadow-xl cursor-pointer group border-0 py-0">
       <div onClick={() => onViewDetails(spot.id)}>
-        <div className="relative h-52 bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center overflow-hidden">
+        <div className="relative h-48 bg-gradient-to-br bg-[#e5e5e5] flex items-center justify-center overflow-hidden">
           {spot.image ? (
             <img
               src={spot.image}
@@ -44,7 +44,7 @@ const SpotCard = ({ spot, onViewDetails }: SpotCardProps) => {
           </Badge>
         </div>
 
-        <CardContent className="p-6">
+        <CardContent className="p-6 bg-white">
 
           <div className="flex justify-between items-start mb-4">
             <h3 className="font-display font-semibold text-xl text-card-foreground group-hover:text-primary transition-colors text-balance">

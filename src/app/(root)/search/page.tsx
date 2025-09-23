@@ -31,7 +31,7 @@ const Search = () => {
             Amala Spots Near You
           </h1>
           <p className="text-lg opacity-90">
-            Found {searchSpotsResult?.spots?.length || 0} spots in Lagos, Nigeria
+            Found {searchSpotsResult?.data?.length || 0} spots in Lagos, Nigeria
           </p>
         </div>
       </div>

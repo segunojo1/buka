@@ -25,7 +25,7 @@ export const handleLocationAccess = (
 
   const options = {
     enableHighAccuracy: true,
-    timeout: 10000, // 10 seconds
+    timeout: 15000, // 10 seconds
     maximumAge: 0 // Force getting a fresh position
   };
 

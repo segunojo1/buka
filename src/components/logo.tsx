@@ -21,7 +21,7 @@ const Logo = () => {
           fillRule="evenodd"
         ></path>
       </svg>
-      <h1 className="text-xl font-bold">Buka</h1>
+      <h1 className="text-2xl font-bold font-ojuju">Buka</h1>
     </Link>
   );
 };
