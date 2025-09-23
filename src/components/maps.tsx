@@ -1,11 +1,9 @@
 "use client";
 
-import useAppStore from "@/store/app.store";
-import { MapPin, Pin } from "lucide-react";
-import React, { useState } from "react";
-
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { GoogleMap, InfoWindow, LoadScript, Marker, useJsApiLoader } from "@react-google-maps/api";
+import React, { useState, useMemo } from "react";
+import { GoogleMap, Marker, useJsApiLoader, InfoWindow } from "@react-google-maps/api";
+import { Loader2 } from "lucide-react";
+import useAppStore, { Spot } from "@/store/app.store";
 
 const containerStyle = {
   width: "100%",
@@ -20,54 +18,49 @@ const defaultCenter = {
   lng: 3.3792,
 };
 
+const Maps: React.FC = () => {
+  const { searchSpotsResult, loadingSearchedSpots, location } = useAppStore();
+  const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
 
-const Maps = () => {
-  const { searchSpotsResult, loadingSearchedSpots } = useAppStore();
-  const [selectedSpot, setSelectedSpot] = useState<any>(null);
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_KEY!,
+    libraries: ["places"],
   });
 
-  if (!isLoaded) {
-    <div className="h-full w-full flex items-center justify-center bg-gray-100">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-2"></div>
-          <p className="text-gray-500">Loading map data...</p>
-        </div>
-      </div>
-  }
-  if (loadingSearchedSpots) {
+  // Determine the center of the map
+  const center = useMemo(() => {
+    if (searchSpotsResult?.data?.length) {
+      return {
+        lat: searchSpotsResult.data[0].latitude,
+        lng: searchSpotsResult.data[0].longitude,
+      };
+    }
+    if (location?.latitude && location?.longitude) {
+      return {
+        lat: location.latitude,
+        lng: location.longitude,
+      };
+    }
+    return defaultCenter;
+  }, [searchSpotsResult, location]);
+
+  // Show loading state while map is loading
+  if (!isLoaded || loadingSearchedSpots) {
     return (
-      <div className="h-full w-full flex items-center justify-center bg-gray-100">
+      <div className="flex h-full w-full items-center justify-center rounded-lg bg-gray-100">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-2"></div>
-          <p className="text-gray-500">Loading map data...</p>
+          <Loader2 className="mx-auto mb-2 h-8 w-8 animate-spin text-gray-500" />
+          <p className="text-gray-500">Loading map...</p>
         </div>
       </div>
     );
   }
-
-  if (!searchSpotsResult?.data?.length) {
-    return (
-      <div className="h-full w-full flex items-center justify-center bg-gray-100">
-        <div className="text-center">
-          <MapPin className="w-12 h-12 mx-auto text-gray-400 mb-2" />
-          <p className="text-gray-500">No locations to display on map</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Center map around first spot
-  const center = {
-    lat: searchSpotsResult.data[0].latitude,
-    lng: searchSpotsResult.data[0].longitude,
-  };
 
   return (
-            <GoogleMap
+    <div className="h-full w-full">
+      <GoogleMap
         mapContainerStyle={containerStyle}
-        center={center || defaultCenter}
+        center={center}
         zoom={12}
         options={{
           zoomControl: true,
@@ -83,8 +76,8 @@ const Maps = () => {
           ],
         }}
       >
-        {/* Render all spots */}
-        {searchSpotsResult.data.map((spot) => (
+        {/* Only render markers if we have spots */}
+        {searchSpotsResult?.data?.map((spot) => (
           <Marker
             key={spot.id}
             position={{
@@ -111,13 +104,18 @@ const Maps = () => {
             <div className="p-2">
               <h3 className="font-medium">{selectedSpot.name}</h3>
               <p className="text-sm text-gray-600">{selectedSpot.address}</p>
-              <p className="text-sm text-gray-600">Rating: {selectedSpot.averageRating} ({selectedSpot.reviewCount} reviews)</p>
+              <p className="text-sm text-gray-600">
+                Rating: {selectedSpot.averageRating} ({selectedSpot.reviewCount} reviews)
+              </p>
               {selectedSpot.specialties && (
                 <div className="mt-2">
                   <span className="text-xs font-medium text-gray-500">Specialties: </span>
-                  <div className="flex flex-wrap gap-1 mt-1">
+                  <div className="mt-1 flex flex-wrap gap-1">
                     {selectedSpot.specialties.map((specialty, index) => (
-                      <span key={index} className="px-2 py-1 text-xs bg-gray-100 rounded-full">
+                      <span
+                        key={index}
+                        className="rounded-full bg-gray-100 px-2 py-1 text-xs"
+                      >
                         {specialty}
                       </span>
                     ))}
@@ -128,6 +126,7 @@ const Maps = () => {
           </InfoWindow>
         )}
       </GoogleMap>
+    </div>
   );
 };
 

@@ -2,6 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import authService from "@/services/auth.service";
+import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -75,8 +76,10 @@ const Login = () => {
             borderRadius: 4,
           }}
           disabled={loading}
-          className="disabled:bg-[#434242]"
+          className="disabled:bg-[#434242] flex  items-center justify-center"
         >
+          {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          
           {loading ? "Loading...": "Login"}
         </button>
       </form> 

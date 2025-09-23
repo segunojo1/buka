@@ -1,49 +1,83 @@
 "use client";
 
-// import SearchAmala from "@/components/home/search-amala";
-// import { Button } from "@/components/ui/button";
-// import { MapPin, MessageCircle } from "lucide-react";
-// import FeaturedSpots from "@/components/home/featured-spots";
-// import WhyChoose from "@/components/home/why-choose";
-// import Link from "next/link";
-import { handleLocationAccess } from '@/lib/utils'
+import React, { useEffect } from "react";
+import { toast } from "sonner";
+import useAppStore, { Spot } from "@/store/app.store";
+import { handleLocationAccess } from '@/lib/utils';
+import Maps from "@/components/maps";
+import appService from "@/services/app.service";
+import Link from "next/link";
+import SpotCard from "@/components/spots/spot-card";
 
 export default function Home() {
-  const {user, setLoadingSearchedSpots, setSearchSpotsResult, searchSpotsResult, location, setLocation } = useAppStore();
-  // console.log(user);
+  const { 
+    user, 
+    setLoadingSearchedSpots, 
+    setSearchSpotsResult, 
+    searchSpotsResult, 
+    setLocation 
+  } = useAppStore();
   
-
-    const onLocationSuccess = (coords: { latitude: number; longitude: number }) => {
-      setLocation(coords);
-    };
-  
-    const onLocationError = (error: GeolocationPositionError) => {
-      console.error('Error accessing geolocation:', error);
-      toast.error('Failed to access your location');
-    };
-  
-    useEffect(() => {
-      handleLocationAccess(onLocationSuccess, onLocationError)
-
-      const getNearbySpots = async() => {
+  useEffect(() => {
+    let isMounted = true;
+    
+    const fetchLocationAndSpots = async () => {
+      try {
+        setLoadingSearchedSpots(true);
+        
+        // First, try to get the current location
         try {
-          setLoadingSearchedSpots(true);
-          console.log(location);
+          const coords = await handleLocationAccess();
+          if (!isMounted) return;
           
-          const result = await appService.getNearbySpots({
-            latitude: location?.latitude,
-            longitude: location?.longitude,
-          });
-          setSearchSpotsResult(result);
+          setLocation(coords);
+          
+          // Only proceed with the API call if we have valid coordinates
+          if (coords.latitude && coords.longitude) {
+            const result = await appService.getNearbySpots({
+              latitude: coords.latitude,
+              longitude: coords.longitude,
+            });
+            
+            if (isMounted) {
+              setSearchSpotsResult(result);
+            }
+          }
         } catch (error) {
-          console.error('Failed to get nearby spots:', error);
+          console.error('Geolocation error:', error);
+          if (isMounted) {
+            toast.error(error instanceof Error ? error.message : 'Failed to access your location');
+            // Set empty results on error with proper SearchResult type
+            setSearchSpotsResult({ 
+              data: [],
+              page: 1,
+              pageSize: 10,
+              totalCount: 0,
+              totalPages: 0,
+              hasNextPage: false,
+              hasPreviousPage: false
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Failed to get nearby spots:', error);
+        if (isMounted) {
           toast.error('Failed to get nearby spots. Please try again.');
-        } finally {
+        }
+      } finally {
+        if (isMounted) {
           setLoadingSearchedSpots(false);
         }
       }
-      getNearbySpots();
-    }, [location])
+    };
+
+    fetchLocationAndSpots();
+
+    // Cleanup function to prevent state updates after unmount
+    return () => {
+      isMounted = false;
+    };
+  }, [setLocation, setLoadingSearchedSpots, setSearchSpotsResult]);
   
   return (
     <div> 
@@ -146,6 +180,11 @@ export default function Home() {
               Trending Locations
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {
+                searchSpotsResult?.data.length <= 0 && (
+                  <p>No spots found</p>
+                )
+              }
             {searchSpotsResult?.data.map((spot: Spot) => (
                 <SpotCard
                   key={spot.id}
@@ -153,10 +192,6 @@ export default function Home() {
                   onViewDetails={() => {}}
                 />
               ))}
-              <TrendingLocation />
-              <TrendingLocation />
-              <TrendingLocation />
-              <TrendingLocation />
             </div>
           </div>
         </div>
@@ -165,50 +200,41 @@ export default function Home() {
   );
 }
 
-import React, { useEffect } from "react";
-import Maps from "@/components/maps";
-import { toast } from "sonner";
-import useAppStore, { Spot } from "@/store/app.store";
-import SearchAmalaForm from '@/components/search-amala-form';
-import appService from '@/services/app.service';
-import SpotCard from '@/components/spots/spot-card';
-import Link from 'next/link';
-
-export const TrendingLocation = () => {
-  return (
-    <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out">
-      <div
-        className="h-48 bg-cover bg-center"
-        style={{
-          backgroundImage:
-            "url(https://lh3.googleusercontent.com/aida-public/AB6AXuD9PwtuwnNljxYw2NpQiwvtEUZbX31YE08r05gKVVyQ_-niksObeegl_KdEPInma3HA2un_sdqxiIEupX6nAkSro_9arQ749aXDYDl06Iu7LidGKQDXyDqkVam-fZID635gv2eIlfUPBRvK0Rbd2v4jc-OJaCuC56G0sLyQefnqMu9lIO3lYXtMtHRpCPucO6xKhOB7HPzEEWUaDbi1cIBCnBErLsox9U5Jt-LZPKfVMbUyzLQ9oBq8nPmcIyBg9PdvF5jLzklo1cXu)",
-        }}
-      ></div>
-      <div className="p-5">
-        <h4 className="font-bold text-lg text-[var(--brand-text-primary)]">
-          Nike Art Gallery
-        </h4>
-        <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
-          Lekki, Lagos
-        </p>
-        <div className="flex items-center justify-between mt-4">
-          <div className="flex items-center gap-2 text-[var(--brand-primary)]">
-            <span className="material-symbols-outlined text-xl">
-              local_fire_department
-            </span>
-            <span className="font-bold text-sm">Busy</span>
-          </div>
-          <a
-            className="text-[var(--brand-primary)] text-sm font-semibold hover:underline"
-            href="#"
-          >
-            View Details
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-};
+// export const TrendingLocation = () => {
+//   return (
+//     <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 ease-in-out">
+//       <div
+//         className="h-48 bg-cover bg-center"
+//         style={{
+//           backgroundImage:
+//             "url(https://lh3.googleusercontent.com/aida-public/AB6AXuD9PwtuwnNljxYw2NpQiwvtEUZbX31YE08r05gKVVyQ_-niksObeegl_KdEPInma3HA2un_sdqxiIEupX6nAkSro_9arQ749aXDYDl06Iu7LidGKQDXyDqkVam-fZID635gv2eIlfUPBRvK0Rbd2v4jc-OJaCuC56G0sLyQefnqMu9lIO3lYXtMtHRpCPucO6xKhOB7HPzEEWUaDbi1cIBCnBErLsox9U5Jt-LZPKfVMbUyzLQ9oBq8nPmcIyBg9PdvF5jLzklo1cXu)",
+//         }}
+//       ></div>
+//       <div className="p-5">
+//         <h4 className="font-bold text-lg text-[var(--brand-text-primary)]">
+//           Nike Art Gallery
+//         </h4>
+//         <p className="text-sm text-[var(--brand-text-secondary)] mt-1">
+//           Lekki, Lagos
+//         </p>
+//         <div className="flex items-center justify-between mt-4">
+//           <div className="flex items-center gap-2 text-[var(--brand-primary)]">
+//             <span className="material-symbols-outlined text-xl">
+//               local_fire_department
+//             </span>
+//             <span className="font-bold text-sm">Busy</span>
+//           </div>
+//           <a
+//             className="text-[var(--brand-primary)] text-sm font-semibold hover:underline"
+//             href="#"
+//           >
+//             View Details
+//           </a>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
 {
   /* <div className="font-sans ">
