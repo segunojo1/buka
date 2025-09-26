@@ -36,7 +36,7 @@ const Navbar = () => {
               </Link>
               <Link
                 className="flex items-center gap-2 text-[var(--brand-text-secondary)] font-semibold text-sm px-4 py-2 rounded-full hover:bg-[var(--brand-secondary)]"
-                href="/"
+                href="/spots"
               >
                 <span className="material-symbols-outlined">explore</span>
                 <span>Discovery</span>

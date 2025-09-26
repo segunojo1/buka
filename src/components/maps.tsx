@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
-import { GoogleMap, Marker, useJsApiLoader, InfoWindow } from "@react-google-maps/api";
-import { Loader2 } from "lucide-react";
+import React, { useState, useMemo, useEffect } from "react";
+import { GoogleMap, Marker, useJsApiLoader, InfoWindow, OverlayView } from "@react-google-maps/api";
+import { Loader2, MapPin } from "lucide-react";
 import useAppStore, { Spot } from "@/store/app.store";
 
 const containerStyle = {
   width: "100%",
-  height: "600px",
+  height: "100%",
   borderRadius: "0.5rem",
   overflow: "hidden",
 };
@@ -16,6 +16,48 @@ const containerStyle = {
 const defaultCenter = {
   lat: 6.5244,
   lng: 3.3792,
+};
+
+// Custom pulsing user location marker
+const UserLocationMarker = () => {
+  const { location } = useAppStore();
+  const [pulse, setPulse] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPulse((prev) => !prev);
+    }, 1500);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!location?.latitude || !location?.longitude) return null;
+
+  return (
+    <OverlayView
+      position={{
+        lat: location.latitude,
+        lng: location.longitude,
+      }}
+      mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+    >
+      <div className="relative">
+
+        <div 
+          className={`absolute -left-3 -top-3 h-6 w-6 rounded-full bg-blue-500 opacity-20 ${
+            pulse ? 'animate-ping' : ''
+          }`}
+          style={{
+            animationDuration: '1.5s',
+          }}
+        />
+
+        <div className="relative">
+          <MapPin className="h-8 w-8 text-blue-600 drop-shadow-lg" fill="currentColor" />
+        </div>
+      </div>
+    </OverlayView>
+  );
 };
 
 const Maps: React.FC = () => {
@@ -77,6 +119,10 @@ const Maps: React.FC = () => {
         }}
       >
         {/* Only render markers if we have spots */}
+        {/* User's current location with pulsing effect */}
+        <UserLocationMarker />
+
+        {/* Restaurant markers */}
         {searchSpotsResult?.data?.map((spot) => (
           <Marker
             key={spot.id}

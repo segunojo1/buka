@@ -300,8 +300,41 @@ class AppService {
     } catch (error) {
       console.error("Failed to get nearby spots:", error);
       throw error;
+    }  
+  }
+
+  public async getSpotById(id: string) {
+    try {
+      const response = await this.api.get(`/api/spot/${id}`, {params: {id}});
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get spot by id:", error);
+      throw error;
     }
   }
+
+  public async postReview(payload: any) {
+    try {
+      const response = await this.api.post(`/api/reviews`, payload);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to post review:", error);
+      throw error;
+    }
+  }
+
+  public async getReviewById(id: string) {
+    try {
+      const response = await this.api.get(`/api/reviews/${id}`, {params: id});
+      return response.data; 
+    } catch (error) {
+      console.error("Failed to get review by id:", error);
+      throw error;
+    }
+  }
+
+
+    
 }
 
 export default AppService.getInstance();
