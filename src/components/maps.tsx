@@ -133,7 +133,7 @@ const SpotMarker = React.memo(
         onClick={() => onClick(spot)}
         icon={icon}
         clusterer={clusterer}
-        label={{ text: '•', color: labelColor, fontWeight: '700', fontSize: '18px' }}
+        label={{ text: '•', color: labelColor, fontWeight: '700', fontSize: '30px'}}
         // Slightly raise zIndex with busyness so higher busyness draws on top
         zIndex={100 + busynessLevel}
       />

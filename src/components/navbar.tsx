@@ -1,9 +1,10 @@
 "use client";
 
+import React, { useEffect, useRef, useState } from "react";
 import Logo from "./logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { User, ChevronDown } from "lucide-react";
+import { User, ChevronDown, Menu, X } from "lucide-react";
 import ProfileDrop from "./profile-drop";
 // import {
 //   SimpleDropdown as DropdownMenu,
@@ -17,80 +18,104 @@ import ProfileDrop from "./profile-drop";
 
 
 const Navbar = () => {
-  const route = usePathname();
-  console.log(route);
+  const pathname = usePathname();
+  const [open, setOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  // Close on Escape
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
+
+  const links = [
+    { href: "/", label: "Home", icon: "home" },
+    { href: "/spots", label: "Discovery", icon: "explore" },
+    { href: "/", label: "Reviews", icon: "reviews" },
+    { href: "/", label: "Heatmap", icon: "heatmap" },
+  ];
+
+  const linkClass = (href: string) =>
+    `flex items-center gap-2 font-semibold text-sm px-4 py-2 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-amber-500 ${
+      pathname === href
+        ? "bg-[var(--brand-secondary)] text-[var(--brand-text-primary)]"
+        : "text-[var(--brand-text-secondary)] hover:bg-[var(--brand-secondary)]"
+    }`;
 
   return (
-    <header className="flex items-center sticky top-0 z-20 w-full bg-[#FAF7F4] py-4 backdrop-blur-lg shadow-sm">
-      <div className=" container mx-auto flex items-center justify-between max-w-5xl px-7">
-        <div className="flex items-center gap-5">
-          <Logo />
-          <div className="flex-1 justify-center hidden lg:flex">
-            <nav className="flex items-center gap-4 bg-white/50 rounded-full px-6 py-2">
-              <Link
-                className="flex items-center gap-2 text-[var(--brand-text-primary)] font-semibold text-sm px-4 py-2 rounded-full bg-[var(--brand-secondary)]"
-                href="/"
-              >
-                <span className="material-symbols-outlined">home</span>
-                <span>Home</span>
-              </Link>
-              <Link
-                className="flex items-center gap-2 text-[var(--brand-text-secondary)] font-semibold text-sm px-4 py-2 rounded-full hover:bg-[var(--brand-secondary)]"
-                href="/spots"
-              >
-                <span className="material-symbols-outlined">explore</span>
-                <span>Discovery</span>
-              </Link>
-              <Link
-                className="flex items-center gap-2 text-[var(--brand-text-secondary)] font-semibold text-sm px-4 py-2 rounded-full hover:bg-[var(--brand-secondary)]"
-                href="/"
-              >
-                <span className="material-symbols-outlined">reviews</span>
-                <span>Reviews</span>
-              </Link>
-              <Link
-                className="flex items-center gap-2 text-[var(--brand-text-secondary)] font-semibold text-sm px-4 py-2 rounded-full hover:bg-[var(--brand-secondary)]"
-                href="/"
-              >
-                <span className="material-symbols-outlined">heatmap</span>
-                <span>Heatmap</span>
-              </Link>
+    <>
+      {/* Skip link for accessibility */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 bg-white text-black px-3 py-2 rounded"
+      >
+        Skip to content
+      </a>
+
+      <header className="sticky top-0 z-20 w-full bg-[#FAF7F4]/95 backdrop-blur-lg shadow-sm">
+        <div className="container mx-auto max-w-5xl px-4 sm:px-6 lg:px-7">
+          <div className="flex items-center justify-between py-3">
+            {/* Left: Logo */}
+            <div className="flex items-center gap-3">
+              <Logo />
+            </div>
+
+            {/* Center: Desktop nav */}
+            <nav className="hidden lg:flex items-center gap-4 bg-white/60 rounded-full px-2 py-1" aria-label="Primary">
+              {links.map((l) => (
+                <Link key={l.href} href={l.href} className={linkClass(l.href)}>
+                  <span className="material-symbols-outlined" aria-hidden="true">{l.icon}</span>
+                  <span>{l.label}</span>
+                </Link>
+              ))}
             </nav>
+
+            {/* Right: Profile + mobile menu button */}
+            <div className="flex items-center gap-2">
+              <ProfileDrop />
+              <button
+                ref={menuButtonRef}
+                className="lg:hidden inline-flex items-center justify-center rounded-full p-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-amber-500"
+                aria-label={open ? "Close menu" : "Open menu"}
+                aria-controls="mobile-menu"
+                aria-expanded={open}
+                onClick={() => setOpen((v) => !v)}
+              >
+                {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </button>
+            </div>
           </div>
         </div>
-        {/* <DropdownMenu>
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
-              <User className="h-4 w-4 text-gray-700" />
-            </div>
-            <DropdownMenuTrigger asChild>
-              <button 
-                className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-gray-900 focus:outline-none"
-                aria-label="Open user menu"
-              >
-                <span>Account</span>
-                <ChevronDown className="h-4 w-4" />
-              </button>
-            </DropdownMenuTrigger>
-          </div>
-          
-          <DropdownMenuContent className="w-56">
-            <div className="px-4 py-3">
-              <p className="text-sm font-medium">Welcome back</p>
-              <p className="truncate text-sm text-gray-500">user@example.com</p>
-            </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Sign out</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu> */}
 
-        <ProfileDrop />
-      </div>
-    </header>
+        {/* Mobile menu panel */}
+        <div
+          id="mobile-menu"
+          className={`lg:hidden transition-[max-height,opacity] duration-300 overflow-hidden ${open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}
+        >
+          <nav className="container mx-auto max-w-5xl px-4 sm:px-6 lg:px-7 pb-4" aria-label="Mobile Primary">
+            <ul className="rounded-2xl bg-white/80 shadow-sm ring-1 ring-black/5 p-2">
+              {links.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className={`flex items-center gap-3 rounded-xl px-4 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-amber-500 ${
+                      pathname === l.href ? "bg-[var(--brand-secondary)]" : "hover:bg-stone-100"
+                    }`}
+                    onClick={() => setOpen(false)}
+                  >
+                    <span className="material-symbols-outlined" aria-hidden="true">{l.icon}</span>
+                    <span className="font-medium">{l.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+      </header>
+    </>
   );
 };
 
