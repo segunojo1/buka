@@ -1,123 +1,76 @@
-import ChatInterface from '@/components/chat/page'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { languages, quickPrompts } from '@/constants'
-import { Globe, MessageCircle, Mic, Zap } from 'lucide-react'
-import React from 'react'
+'use client';
 
-const Chat = () => {
+import { ChatInterface } from '@/components/chat/ChatInterface';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+
+export default function ChatPage() {
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
+
+  // useEffect(() => {
+  //   if (!isLoading && !user) {
+  //     router.push('/auth/login?redirect=/chat');
+  //   }
+  // }, [user, isLoading, router]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  // if (!user) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen px-4">
+  //       <div className="text-center">
+  //         <h1 className="text-2xl font-bold text-gray-900 mb-4">Please sign in to continue</h1>
+  //         <p className="text-gray-600 mb-6">You need to be signed in to access the chat.</p>
+  //         <Button 
+  //           onClick={() => router.push(`/auth/login?redirect=${encodeURIComponent('/chat')}`)}
+  //           className="bg-indigo-600 hover:bg-indigo-700"
+  //         >
+  //           Sign In
+  //         </Button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex flex-col h-screen w-full bg-background">
       {/* Header */}
-      <div className="bg-gradient-to-r from-primary to-secondary bg-contain text-primary-foreground py-8 px-4"
-      style={{
-          backgroundImage: `url("/test-bg.jpg")`,
-        }}>
-        <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">
-            AI-Powered Amala Assistant
-          </h1>
-          <p className="text-lg opacity-90 max-w-2xl mx-auto">
-            Chat with our intelligent assistant in English, Pidgin, or Yoruba to find the perfect amala spot for you
-          </p>
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Chat Interface */}
-          <div className="lg:col-span-2">
-            <ChatInterface />
+      <header className="border-b border-border bg-card">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-foreground">Food Guide Assistant</h1>
+            <p className="text-sm text-muted-foreground">Your personal guide to the best local food spots</p>
           </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Language Support */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Globe className="w-5 h-5 text-primary" />
-                  Supported Languages
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {languages.map((lang, index) => (
-                  <div key={index} className="p-3 rounded-lg bg-muted/50">
-                    <div className="font-medium text-sm mb-1">{lang.name}</div>
-                    <div className="text-xs text-muted-foreground italic">
-                      "{lang.example}"
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* Features */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-secondary" />
-                  AI Features
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <MessageCircle className="w-5 h-5 text-primary mt-0.5" />
-                  <div>
-                    <div className="font-medium text-sm">Natural Conversation</div>
-                    <div className="text-xs text-muted-foreground">
-                      Ask questions naturally like you would to a friend
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <Mic className="w-5 h-5 text-accent mt-0.5" />
-                  <div>
-                    <div className="font-medium text-sm">Voice Commands</div>
-                    <div className="text-xs text-muted-foreground">
-                      Speak your questions for hands-free search
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <Globe className="w-5 h-5 text-secondary mt-0.5" />
-                  <div>
-                    <div className="font-medium text-sm">Multi-language</div>
-                    <div className="text-xs text-muted-foreground">
-                      Understands English, Pidgin, and Yoruba
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Quick Prompts */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Prompts</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
-                  {quickPrompts.map((prompt, index) => (
-                    <Button
-                      key={index}
-                      variant="ghost"
-                      size="sm"
-                      className="w-full justify-start text-left h-auto py-2 px-3 text-wrap"
-                    >
-                      {prompt}
-                    </Button>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+          <div className="flex items-center gap-4">
+            <Button variant="outline" size="sm">New Chat</Button>
+            <Button variant="ghost" size="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </Button>
           </div>
         </div>
-      </div>
+      </header>
+      
+      {/* Main chat area */}
+      <main className="flex-1 overflow-hidden">
+        <ChatInterface fullScreen />
+      </main>
+      
+      {/* Footer */}
+      <footer className="border-t border-border bg-card py-3 px-4 text-center text-xs text-muted-foreground">
+        <p>Food Guide Assistant may produce inaccurate information. Always verify important details.</p>
+      </footer>
     </div>
-  )
+  );
 }
-
-export default Chat

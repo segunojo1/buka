@@ -11,6 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import appService from '@/services/app.service';
+import { ReviewsSection } from "@/components/reviews/ReviewsSection";
+import { Suspense } from "react";
 
 interface BusynessInfo {
   currentLevel: number;
@@ -129,7 +131,9 @@ const SpotId = () => {
             <div className="lg:col-span-2 space-y-6">
               <SpotLocation spot={spot} />
               <SpotDetails spot={spot} />
-              <ReviewsSection spot={spot} />
+              <Suspense fallback={<div>Loading reviews...</div>}>
+                <ReviewsSection spotId={spot.id} />
+              </Suspense>
             </div>
             <div className="space-y-6">
               <BusynessInfo info={spot.busynessInfo} />
@@ -285,64 +289,3 @@ export const ReviewForm = () => {
   );
 };
 
-export const AllReviews = () => {
-  return (
-    <div className="rounded-xl shadow-lg bg-white p-6 space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="font-ojuju text-2xl font-bold text-stone-800">
-          Reviews
-        </h3>
-        <Button className="text-sm font-medium text-amber-600 hover:text-amber-800">
-          View All
-        </Button>
-      </div>
-      <div className="space-y-6">
-        <ReviewCard />
-        <ReviewCard />
-        <ReviewCard />
-      </div>
-      <div className="flex justify-center pt-4">
-        <div className="flex items-center gap-2">
-          <Button className="flex h-8 w-8 items-center justify-center rounded-full text-stone-500 hover:bg-stone-100 disabled:opacity-50">
-            <span className="material-symbols-outlined">chevron_left</span>
-          </Button>
-          {[1, 2, 3].map((star) => (
-            <Button className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-600 text-white text-sm font-bold">
-              {star}
-            </Button>
-          ))}
-          <Button className="flex h-8 w-8 items-center justify-center rounded-full text-stone-500 hover:bg-stone-100">
-            <span className="material-symbols-outlined">chevron_right</span>
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export const ReviewCard = () => {
-  return (
-    <div>
-      <div className="flex gap-4">
-        <div className="h-12 w-12 rounded-full bg-black bg-cover bg-center flex-shrink-0"></div>
-        <div className="flex-1">
-          <div className="flex items-center justify-between">
-            <h4 className="font-bold text-stone-800">Segun Ojo</h4>
-            <div className="flex text-amber-500">
-              {[0, 1, 2, 3, 4, 5].map((star) => (
-                <span className="material-symbols-outlined !text-base">
-                  star
-                </span>
-              ))}
-            </div>
-          </div>
-          <p>2 days ago</p>
-          <p className="mt-2 text-stone-700">
-            The best jollof rice in town! The atmosphere is so welcoming and the
-            staff are incredibly friendly. A must-visit.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-};

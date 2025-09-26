@@ -129,14 +129,14 @@ const Spots = () => {
               </div>
             ) : spots.length > 0 ? (
               spots.map((spot) => (
-                <Link href={`/spots/${spot.id}`}>
+                <Link key={spot.id} href={`/spots/${spot.id}`}>
                 <SpotCard 
                   key={spot.id} 
                   spot={{
                     id: spot.id,
                     name: spot.name,
                     address: spot.address,
-                    distanceKm: 0,
+                    distanceKm: spot.distanceKm,
                     rating: spot.averageRating || 0,
                     reviewCount: spot.reviewCount || 0,
                     priceRange: spot.priceRange ? '$'.repeat(Math.min(spot.priceRange, 5)) : '$$',

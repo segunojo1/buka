@@ -1,5 +1,11 @@
 import { create } from 'zustand';
 
+export interface BusynessInfo {
+  currentLevel: number; // 0-4 scale (0=not busy, 4=extremely busy)
+  lastUpdated: string;
+  trend?: 'increasing' | 'decreasing' | 'stable';
+}
+
 export interface Spot {
   id: string;
   name: string;
@@ -14,12 +20,15 @@ export interface Spot {
   reviewCount: number;
   priceRange: number;
   specialties: string[];
+  categories: string[];
+  busyness: BusynessInfo;
+  rating: number; // Alias for averageRating for compatibility
   createdAt: string;
   updatedAt: string;
   isVerified: boolean;
   distanceKm: number;
   reviews: any[] | null;
-  busynessInfo: any | null;
+  busynessInfo: BusynessInfo | null; // Legacy, use busyness instead
 }
 
 export interface SearchResult {
@@ -54,9 +63,11 @@ interface AppStore {
   searchSpotsResult: SearchResult | null;
   searchQuery: string;
   loadingSearchedSpots: boolean;
+  selectedSpot: Spot | null;
   setSearchSpotsResult: (result: SearchResult | null) => void;
   setSearchQuery: (query: string) => void;
   setLoadingSearchedSpots: (loading: boolean) => void;
+  setSelectedSpot: (spot: Spot | null) => void;
   clearSearch: () => void;
   
   // Location state
@@ -65,6 +76,7 @@ interface AppStore {
   
   // User state
   user: User | null ;
+  isLoading: boolean;
   isAuthenticated: boolean;
   setUser: (user: User | null) => void;
   login: (userData: User) => void;
@@ -76,8 +88,10 @@ const useAppStore = create<AppStore>((set) => ({
   // Search state
   searchSpotsResult: null,
   searchQuery: '',
+  selectedSpot: null,
   setSearchSpotsResult: (result) => set({ searchSpotsResult: result }),
   setSearchQuery: (query) => set({ searchQuery: query }),
+  setSelectedSpot: (spot) => set({ selectedSpot: spot }),
   clearSearch: () => set({ searchQuery: '', searchSpotsResult: null }),
   
   // Location state
@@ -91,6 +105,8 @@ const useAppStore = create<AppStore>((set) => ({
   // User state
   user: null,
   isAuthenticated: false,
+
+  isLoading: false,
   
   // User actions
   setUser: (user) => set({ 

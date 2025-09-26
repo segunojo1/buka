@@ -243,17 +243,17 @@ class AppService {
   }
 
   public async sendVoiceChat(payload: {
-    audioFile: File;
+    AudioFile: File;
     sessionId: string;
     userLocation: { latitude: number; longitude: number };
     language: string;
     audioFormat: string;
   }) {
     const formData = new FormData();
-    formData.append('audio', payload.audioFile);
+    formData.append('AudioFile', payload.AudioFile);
     formData.append('sessionId', payload.sessionId);
     formData.append('language', payload.language);
-    formData.append('audioFormat', payload.audioFormat);
+    formData.append('AudioFormat', payload.audioFormat);
     formData.append('latitude', payload.userLocation.latitude.toString());
     formData.append('longitude', payload.userLocation.longitude.toString());
 
@@ -313,6 +313,104 @@ class AppService {
     }
   }
 
+  public async searchSpots(params: {
+    query?: string;
+    filters?: {
+      minRating?: number;
+      maxDistance?: number;
+      verifiedOnly?: boolean;
+    };
+    pagination?: {
+      page?: number;
+      pageSize?: number;
+    };
+  }) {
+    try {
+      const response = await this.api.post('/api/spot/search', params);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to search spots:', error);
+      throw error;
+    }
+  }
+
+  public async updateSpot(id: string, data: {
+    name?: string;
+    description?: string;
+    address?: string;
+    rating?: number;
+  }) {
+    try {
+      const response = await this.api.put(`/api/spot/${id}`, data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update spot:', error);
+      throw error;
+    }
+  }
+
+  public async deleteSpot(id: string) {
+    try {
+      await this.api.delete(`/api/spot/${id}`);
+    } catch (error) {
+      console.error('Failed to delete spot:', error);
+      throw error;
+    }
+  }
+
+  public async createSpot(data: {
+    name: string;
+    description: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+    rating?: number;
+  }) {
+    try {
+      const response = await this.api.post('/api/spot', data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create spot:', error);
+      throw error;
+    }
+  }
+
+  public async listSpots(params?: {
+    page?: number;
+    pageSize?: number;
+  }) {
+    try {
+      const response = await this.api.get('/api/spot', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to list spots:', error);
+      throw error;
+    }
+  }
+
+  public async getTopRatedSpots() {
+    try {
+      const response = await this.api.get('/api/spot/top-rated');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to get top rated spots:', error);
+      throw error;
+    }
+  }
+
+  public async getRecentSpots() {
+    try {
+      const response = await this.api.get('/api/spot/recent');
+      return response.data;
+    } catch (error) {
+      console.error('Failed to get recent spots:', error);
+      throw error;
+    }
+  }
+
+
+//// ==================START REVIEWS===========
+
   public async postReview(payload: any) {
     try {
       const response = await this.api.post(`/api/reviews`, payload);
@@ -325,7 +423,7 @@ class AppService {
 
   public async getReviewById(id: string) {
     try {
-      const response = await this.api.get(`/api/reviews/${id}`, {params: id});
+      const response = await this.api.get(`/api/reviews/${id}`, {params: {id}});
       return response.data; 
     } catch (error) {
       console.error("Failed to get review by id:", error);
@@ -333,8 +431,87 @@ class AppService {
     }
   }
 
+  public async updateReview(id: string, reviewData: { rating: number; comment: string }) {
+    try {
+      const response = await this.api.put(`/api/reviews/${id}`, reviewData);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to update review:", error);
+      throw error;
+    }
+  }
 
-    
+  public async deleteReview(id: string) {
+    try {
+      await this.api.delete(`/api/reviews/${id}`);
+    } catch (error) {
+      console.error("Failed to delete review:", error);
+      throw error;
+    }
+  }
+
+  public async getSpotReviews(spotId: string) {
+    try {
+      const response = await this.api.get(`/api/reviews/spot/${spotId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get spot reviews:", error);
+      throw error;
+    }
+  }
+
+  public async getUserReviews(userId: string) {
+    try {
+      const response = await this.api.get(`/api/reviews/user/${userId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get user reviews:", error);
+      throw error;
+    }
+  }
+
+  public async getSpotReviewStats(spotId: string) {
+    try {
+      const response = await this.api.get(`/api/reviews/spot/${spotId}/statistics`);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get spot review statistics:", error);
+      throw error;
+    }
+  }
+
+  public async reportReview(id: string, reason: string) {
+    try {
+      const response = await this.api.post(`/api/reviews/${id}/report`, { reason });
+      return response.data;
+    } catch (error) {
+      console.error("Failed to report review:", error);
+      throw error;
+    }
+  }
+
+  public async getUnmoderatedReviews() {
+    try {
+      const response = await this.api.get('/api/reviews/unmoderated');
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get unmoderated reviews:", error);
+      throw error;
+    }
+  }
+
+  public async moderateReview(id: string, action: string, notes: string) {
+    try {
+      const response = await this.api.post(`/api/reviews/${id}/moderate`, { action, notes });
+      return response.data;
+    } catch (error) {
+      console.error("Failed to moderate review:", error);
+      throw error;
+    }
+  }
 }
+
+
+// ================= END REVIEWS ===========================
 
 export default AppService.getInstance();
