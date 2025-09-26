@@ -1,0 +1,38 @@
+[
+  {
+    "id": "spot-1",
+    "name": "Amala Junction",
+    "address": "123 Market St, Lagos",
+    "latitude": 6.5244,
+    "longitude": 3.3792,
+    "averageRating": 4.5,
+    "reviewCount": 128,
+    "priceRange": 2,
+    "specialties": ["Amala", "Ewedu", "Gbegiri"],
+    "distanceKm": 0.8
+  },
+  {
+    "id": "spot-2",
+    "name": "Buka Place",
+    "address": "45 Marina Rd, Lagos",
+    "latitude": 6.4560,
+    "longitude": 3.4281,
+    "averageRating": 4.1,
+    "reviewCount": 76,
+    "priceRange": 1,
+    "specialties": ["Jollof", "Suya"],
+    "distanceKm": 2.1
+  },
+  {
+    "id": "spot-3",
+    "name": "Mama Put Corner",
+    "address": "9 Freedom Way, Lekki",
+    "latitude": 6.4410,
+    "longitude": 3.4929,
+    "averageRating": 3.9,
+    "reviewCount": 54,
+    "priceRange": 1,
+    "specialties": ["Pounded Yam", "Egusi"],
+    "distanceKm": 5.4
+  }
+]
