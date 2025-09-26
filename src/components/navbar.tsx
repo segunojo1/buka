@@ -33,9 +33,9 @@ const Navbar = () => {
 
   const links = [
     { href: "/", label: "Home", icon: "home" },
-    { href: "/spots", label: "Discovery", icon: "explore" },
+    { href: "/spots", label: "Spots", icon: "explore" },
     { href: "/", label: "Reviews", icon: "reviews" },
-    { href: "/", label: "Heatmap", icon: "heatmap" },
+    { href: "/chat", label: "Chat", icon: "smart_toy" },
   ];
 
   const linkClass = (href: string) =>
@@ -64,11 +64,10 @@ const Navbar = () => {
             </div>
 
             {/* Center: Desktop nav */}
-            <nav className="hidden lg:flex items-center gap-4 bg-white/60 rounded-full px-2 py-1" aria-label="Primary">
+            <nav className="hidden lg:flex items-center gap-2 bg-white/60 rounded-full px-2 py-1" aria-label="Primary">
               {links.map((l) => (
-                <Link key={l.href} href={l.href} className={linkClass(l.href)}>
-                  <span className="material-symbols-outlined" aria-hidden="true">{l.icon}</span>
-                  <span>{l.label}</span>
+                <Link key={l.label} href={l.href} className={linkClass(l.href)}>
+                  {l.label}
                 </Link>
               ))}
             </nav>
@@ -98,15 +97,14 @@ const Navbar = () => {
           <nav className="container mx-auto max-w-5xl px-4 sm:px-6 lg:px-7 pb-4" aria-label="Mobile Primary">
             <ul className="rounded-2xl bg-white/80 shadow-sm ring-1 ring-black/5 p-2">
               {links.map((l) => (
-                <li key={l.href}>
+                <li key={l.label}>
                   <Link
                     href={l.href}
-                    className={`flex items-center gap-3 rounded-xl px-4 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-amber-500 ${
+                    className={`flex items-center rounded-xl px-4 py-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-amber-500 ${
                       pathname === l.href ? "bg-[var(--brand-secondary)]" : "hover:bg-stone-100"
                     }`}
                     onClick={() => setOpen(false)}
                   >
-                    <span className="material-symbols-outlined" aria-hidden="true">{l.icon}</span>
                     <span className="font-medium">{l.label}</span>
                   </Link>
                 </li>

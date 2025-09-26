@@ -1,3 +1,5 @@
+"use client"
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { Bot, User } from "lucide-react";
@@ -6,6 +8,8 @@ import { MapPin, Star } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { Card } from "../ui/card";
 import { useRouter } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 interface SpotCardProps {
   spot: {
@@ -101,9 +105,28 @@ export function ChatMessage({ message }: ChatMessageProps) {
         )}
       </div>
       <div className="flex-1 space-y-2">
-        <div className="prose prose-sm max-w-none">
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            a: ({node, ...props}) => (
+              <a
+                {...props}
+                className="text-blue-600 underline underline-offset-2 hover:text-blue-700"
+                target="_blank"
+                rel="noopener noreferrer"
+              />
+            ),
+            code: ({inline, className, children, ...props}) => (
+              <code className="bg-stone-100 rounded px-1 py-0.5" {...props}>
+                {children}
+              </code>
+            ),
+            ul: ({node, ...props}) => <ul className="list-disc pl-6" {...props} />,
+            ol: ({node, ...props}) => <ol className="list-decimal pl-6" {...props} />,
+          }}
+        >
           {message.content}
-        </div>
+        </ReactMarkdown>
         
         {hasSpots && (
           <div className="mt-4 space-y-3">

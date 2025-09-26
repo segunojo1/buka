@@ -208,7 +208,7 @@ export function ChatInterface({ className, fullScreen = false }: ChatInterfacePr
     return (
       <div className="flex flex-col h-full w-full bg-background">
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto  mx-auto p-4 space-y-4">
           {messages.map((message, index) => (
             <ChatMessage key={index} message={message} />
           ))}
@@ -271,7 +271,7 @@ export function ChatInterface({ className, fullScreen = false }: ChatInterfacePr
   }
 
   return (
-    <div className={`fixed bottom-6 right-6 w-full max-w-md z-50 ${className}`}>
+    <div className={`fixed bottom-6 right-6 w-full max-w-sm z-50 ${className}`}>
       <Card className="flex flex-col h-[600px] shadow-xl rounded-xl overflow-hidden border border-border">
         {/* Header */}
         <div className="bg-gradient-to-r from-primary to-secondary text-primary-foreground p-4 flex justify-between items-center">

@@ -155,7 +155,7 @@ export default function Home() {
                 </Link>
                 <Link
                   className="flex items-center gap-4 p-4 rounded-xl bg-[var(--brand-secondary)] hover:bg-opacity-70 transition-colors"
-                  href="/"
+                  href="/chat"
                 >
                   <span className="material-symbols-outlined text-2xl text-[var(--brand-primary)]">
                     smart_toy
@@ -165,7 +165,7 @@ export default function Home() {
                       AI Assistant
                     </h4>
                     <p className="text-sm text-[var(--brand-text-secondary)]">
-                      Get personalized recommendations
+                      Chat with Buka to get recommendations
                     </p>
                   </div>
                   <span className="material-symbols-outlined text-[var(--brand-text-secondary)] opacity-50">
@@ -181,11 +181,11 @@ export default function Home() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {
-                searchSpotsResult?.data.length <= 0 && (
+                searchSpotsResult?.data?.length <= 0 && (
                   <p>No spots found</p>
                 )
               }
-            {searchSpotsResult?.data.map((spot: Spot) => (
+            {searchSpotsResult?.data?.map((spot: Spot) => (
                 <SpotCard
                   key={spot.id}
                   spot={spot}
