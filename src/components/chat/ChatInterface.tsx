@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/useAuth';
 import AppService from '@/services/app.service';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import useAppStore from '@/store/app.store';
 
 export interface ChatInterfaceProps {
   className?: string;
@@ -39,6 +40,7 @@ export function ChatInterface({ className, fullScreen = false }: ChatInterfacePr
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
   const router = useRouter();
+  const { awardPoints, unlockBadge, gamification } = useAppStore();
 
   // Initialize session and location
   useEffect(() => {
@@ -89,6 +91,13 @@ export function ChatInterface({ className, fullScreen = false }: ChatInterfacePr
     
     // Add user message to chat
     setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+    // Gamification: award points for sending a message
+    try {
+      awardPoints(5, 'chat-text');
+      if ((gamification?.points ?? 0) === 0) {
+        unlockBadge('first-chat');
+      }
+    } catch {}
     
     setIsLoading(true);
     
@@ -108,6 +117,13 @@ export function ChatInterface({ className, fullScreen = false }: ChatInterfacePr
           spots: response.spots || []
         }
       ]);
+      // Gamification: award points for sending a voice message
+      try {
+        awardPoints(5, 'chat-voice');
+        if ((gamification?.points ?? 0) === 0) {
+          unlockBadge('first-chat');
+        }
+      } catch {}
     } catch (error) {
       console.error('Error sending message:', error);
       toast('Failed to send message. Please try again.');

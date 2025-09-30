@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { User, ChevronDown, Menu, X } from "lucide-react";
 import ProfileDrop from "./profile-drop";
+import useAppStore from "@/store/app.store";
 // import {
 //   SimpleDropdown as DropdownMenu,
 //   SimpleDropdownContent as DropdownMenuContent,
@@ -21,6 +22,7 @@ const Navbar = () => {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
+  const { gamification } = useAppStore();
 
   // Close on Escape
   useEffect(() => {
@@ -73,7 +75,16 @@ const Navbar = () => {
             </nav>
 
             {/* Right: Profile + mobile menu button */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
+              {/* Points pill */}
+              <span
+                className="hidden md:inline-flex items-center gap-1 rounded-full bg-white/70 px-3 py-1 text-sm font-medium text-stone-700 ring-1 ring-black/5"
+                aria-label={`Points ${gamification.points}`}
+                title={`${gamification.points} pts`}
+              >
+                <span>Points</span>
+                <span className="font-bold text-stone-900">{gamification.points}</span>
+              </span>
               <ProfileDrop />
               <button
                 ref={menuButtonRef}

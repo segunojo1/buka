@@ -130,13 +130,13 @@ const SpotId = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-6">
               <SpotLocation spot={spot} />
-              <SpotDetails spot={spot} />
+              {/* <SpotDetails spot={spot} /> */}
               <Suspense fallback={<div>Loading reviews...</div>}>
                 <ReviewsSection spotId={spot.id} />
               </Suspense>
             </div>
             <div className="space-y-6">
-              <BusynessInfo info={spot.busynessInfo} />
+              {/* <BusynessInfo info={spot.busynessInfo} /> */}
               <ReviewForm spotId={spot.id} />
             </div>
           </div>
@@ -224,7 +224,7 @@ const MainCard = ({ spot }: MainCardProps) => {
           <span className="text-gray-400">•</span>
           <div className="flex items-center text-sm text-gray-600">
             <span>{'$'.repeat(Math.min(spot.priceRange, 5))}</span>
-            <span className="text-gray-400 ml-1">• {spot.distanceKm.toFixed(1)} km</span>
+            <span className="text-gray-400 ml-1">• {spot?.distanceKm?.toFixed(1)} km</span>
           </div>
         </div>
 

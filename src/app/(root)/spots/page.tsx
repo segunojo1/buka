@@ -18,6 +18,7 @@ const Spots = () => {
   const [loading, setLoading] = React.useState<boolean>(false);
   const [mapCenter, setMapCenter] = React.useState<[number, number]>([0, 0]);
   const [isListExpanded, setIsListExpanded] = React.useState(false);
+  const { awardPoints, unlockBadge, gamification } = useAppStore();
 
   const toggleList = useCallback(() => {
     setIsListExpanded(prev => !prev);
@@ -28,7 +29,13 @@ const Spots = () => {
     if (window.innerWidth < 768) {
       setIsListExpanded(false);
     }
-  }, [router]);
+    try {
+      awardPoints(2, 'view-spot');
+      if (!(gamification?.badges || []).includes('first-spot-view')) {
+        unlockBadge('first-spot-view');
+      }
+    } catch {}
+  }, [router, awardPoints, unlockBadge, gamification]);
 
   const fetchNearbySpots = React.useCallback(async () => {
     try {

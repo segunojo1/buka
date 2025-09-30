@@ -58,6 +58,11 @@ export interface User {
   updatedAt: string;
 }
 
+export interface GamificationState {
+  points: number;
+  badges: string[]; // simple string badge IDs
+}
+
 interface AppStore {
   // Search state
   searchSpotsResult: SearchResult | null;
@@ -82,9 +87,36 @@ interface AppStore {
   login: (userData: User) => void;
   logout: () => void;
   updateUserProfile: (updates: Partial<User>) => void;
+
+  // Gamification (frontend-only)
+  gamification: GamificationState;
+  awardPoints: (amount: number, reason?: string) => void;
+  unlockBadge: (badgeId: string) => void;
 }
 
-const useAppStore = create<AppStore>((set) => ({
+const loadGamification = (): GamificationState => {
+  if (typeof window === 'undefined') return { points: 0, badges: [] };
+  try {
+    const raw = localStorage.getItem('buka_gamification');
+    if (!raw) return { points: 0, badges: [] };
+    const parsed = JSON.parse(raw);
+    return {
+      points: Number(parsed.points) || 0,
+      badges: Array.isArray(parsed.badges) ? parsed.badges : [],
+    };
+  } catch {
+    return { points: 0, badges: [] };
+  }
+};
+
+const saveGamification = (g: GamificationState) => {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem('buka_gamification', JSON.stringify(g));
+  } catch {}
+};
+
+const useAppStore = create<AppStore>((set, get) => ({
   // Search state
   searchSpotsResult: null,
   searchQuery: '',
@@ -128,6 +160,29 @@ const useAppStore = create<AppStore>((set) => ({
     set((state) => ({ 
       user: state.user ? { ...state.user, ...updates } : null 
     })),
+
+  // Gamification (frontend-only)
+  gamification: loadGamification(),
+  awardPoints: (amount, reason) => {
+    set((state) => {
+      const next = { 
+        points: Math.max(0, (state.gamification.points || 0) + (amount || 0)),
+        badges: state.gamification.badges || [],
+      };
+      saveGamification(next);
+      return { gamification: next } as Partial<AppStore> as AppStore;
+    });
+  },
+  unlockBadge: (badgeId) => {
+    if (!badgeId) return;
+    set((state) => {
+      const badges = new Set(state.gamification.badges || []);
+      badges.add(badgeId);
+      const next = { points: state.gamification.points || 0, badges: Array.from(badges) };
+      saveGamification(next);
+      return { gamification: next } as Partial<AppStore> as AppStore;
+    });
+  },
 }));
 
 export default useAppStore;
